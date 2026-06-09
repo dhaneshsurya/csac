@@ -1,0 +1,288 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .faculty-section-padding {
+        padding: 60px 0 100px 0;
+    }
+    .faculty-search-wrapper {
+        position: relative;
+        max-width: 500px;
+        margin-bottom: 35px;
+    }
+    .faculty-search-input {
+        width: 100%;
+        border: 2px solid #e2e8f0;
+        border-radius: 30px;
+        padding: 14px 24px 14px 50px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #2d3748;
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+    .faculty-search-input:focus {
+        border-color: #E61013;
+        box-shadow: 0 4px 20px rgba(230, 16, 19, 0.12);
+        outline: none;
+    }
+    .search-icon-wrapper {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0aec0;
+        font-size: 16px;
+        pointer-events: none;
+    }
+    .table-card-wrapper {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        border: 1px solid #edf2f7;
+        overflow: hidden;
+    }
+    .custom-faculty-table {
+        margin-bottom: 0;
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .custom-faculty-table thead th {
+        background-color: #E61013;
+        color: #ffffff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 13px;
+        letter-spacing: 0.8px;
+        padding: 20px 24px;
+        border-bottom: none;
+        text-align: left;
+    }
+    .custom-faculty-table tbody tr {
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        border-bottom: 1px solid #edf2f7;
+    }
+    .custom-faculty-table tbody tr:last-child {
+        border-bottom: none;
+    }
+    .custom-faculty-table tbody tr:hover {
+        background-color: rgba(230, 16, 19, 0.02);
+        transform: translateX(4px);
+    }
+    .custom-faculty-table tbody td {
+        padding: 16px 24px;
+        vertical-align: middle;
+        color: #4a5568;
+        font-size: 15px;
+    }
+    .sno-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        color: #4a5568;
+        font-weight: 700;
+        font-size: 13px;
+        border-radius: 50%;
+    }
+    .avatar-placeholder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #f3a6a8 0%, #e61013 100%);
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 16px;
+        border-radius: 50%;
+        box-shadow: 0 4px 10px rgba(230, 16, 19, 0.15);
+    }
+    .designation-text {
+        font-weight: 500;
+        color: #4a5568;
+    }
+    .dept-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.3px;
+        text-transform: capitalize;
+        display: inline-block;
+    }
+    .dept-arts {
+        background-color: rgba(66, 153, 225, 0.12);
+        color: #2b6cb0;
+    }
+    .dept-science {
+        background-color: rgba(72, 187, 120, 0.12);
+        color: #2f855a;
+    }
+    .dept-commerce {
+        background-color: rgba(159, 122, 234, 0.12);
+        color: #6b46c1;
+    }
+    .no-results-row td {
+        text-align: center;
+        padding: 60px !important;
+        color: #a0aec0;
+        font-weight: 500;
+        font-size: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb Section -->
+<section class="rts-breadcrumb breadcrumb-height breadcumb-bg" style="{% with bcimg=breadcrumb_images.staff_teaching %}{% if bcimg %}background-image: url('{{ bcimg }}');{% endif %}{% endwith %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-content">
+                    <h2 class="section-title" id="pageMainHeading">{{ breadcrumb }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Teaching Staff Section -->
+<section class="faculty-section-padding">
+    <div class="container">
+        
+        <div class="row mb-4">
+            <div class="col-12 text-center text-md-start">
+                <h3 class="fw-bold mb-2" style="color: #E61013; font-size: 32px;">Faculty List 2025-26</h3>
+                <p class="text-muted">Meet our dedicated, qualified, and experienced teaching staff members.</p>
+                <div style="width: 60px; height: 3px; background-color: #E61013; margin: 10px auto 30px auto;" class="d-md-none"></div>
+                <div style="width: 60px; height: 3px; background-color: #E61013; margin: 10px 0 30px 0;" class="d-none d-md-block"></div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="row">
+            <div class="col-12">
+                <div class="faculty-search-wrapper mx-auto mx-md-0">
+                    <span class="search-icon-wrapper">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" 
+                           id="facultySearch" 
+                           class="faculty-search-input" 
+                           placeholder="Search by Name, Designation, or Department..." 
+                           aria-label="Search faculty members">
+                </div>
+            </div>
+        </div>
+
+        <!-- Faculty Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="table-card-wrapper">
+                    <div class="table-responsive">
+                        <table class="table custom-faculty-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col" style="width: 10%;">S.No</th>
+                                    <th scope="col" style="width: 40%;">Name</th>
+                                    <th scope="col" style="width: 25%;">Designation</th>
+                                    <th scope="col" style="width: 25%;">Department</th>
+                                </tr>
+                            </thead>
+                            <tbody id="facultyTableBody">
+                                {% for member in faculty %}
+                                <tr class="faculty-row" 
+                                    data-name="{{ member.name|lower }}" 
+                                    data-designation="{{ member.designation|lower }}" 
+                                    data-department="{{ member.department.name|lower }}">
+                                    <td>
+                                        <span class="sno-badge">{{ member.order }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-placeholder me-3" aria-hidden="true">
+                                                {{ member.name|slice:":1" }}
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-0 text-dark">{{ member.name }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="designation-text">{{ member.designation }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge dept-badge dept-{{ member.department.category }}">
+                                            {{ member.department.name }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-5">
+                                        <div class="alert alert-info d-inline-block">
+                                            <i class="fas fa-info-circle me-2"></i> Faculty information will be updated soon.
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                <tr id="noResultsRow" class="no-results-row" style="display: none;">
+                                    <td colspan="4">
+                                        <i class="fas fa-search mb-2 fa-2x"></i>
+                                        <div>No matching faculty members found.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById("facultySearch");
+        const tableBody = document.getElementById("facultyTableBody");
+        const rows = tableBody.getElementsByClassName("faculty-row");
+        const noResultsRow = document.getElementById("noResultsRow");
+
+        if (searchInput && tableBody) {
+            searchInput.addEventListener("input", function() {
+                const query = searchInput.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = rows[i];
+                    const name = row.getAttribute("data-name") || "";
+                    const designation = row.getAttribute("data-designation") || "";
+                    const department = row.getAttribute("data-department") || "";
+
+                    if (name.includes(query) || designation.includes(query) || department.includes(query)) {
+                        row.style.display = "";
+                        visibleCount++;
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+
+                if (visibleCount === 0 && rows.length > 0) {
+                    noResultsRow.style.display = "";
+                } else {
+                    noResultsRow.style.display = "none";
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

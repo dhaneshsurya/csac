@@ -1,0 +1,132 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- Breadcrumb Section -->
+<section class="rts-breadcrumb breadcrumb-height breadcumb-bg" style="{% with bcimg=breadcrumb_images.nep %}{% if bcimg %}background-image: url('{{ bcimg }}');{% endif %}{% endwith %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-content">
+                    <h2 class="section-title">{{ breadcrumb }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NEP Section -->
+<section class="rts-section-padding py-5">
+    <div class="container">
+
+        <!-- Heading -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h2 class="fw-bold mb-3" style="color: #E61013;">NEP 2020 Implementation</h2>
+                <p class="text-muted lh-lg fs-6">
+                    In alignment with the National Education Policy (NEP) 2020, Chaitanya Science and Arts College has adopted the new educational framework to transition towards a more holistic, flexible, and multidisciplinary system of higher education. NEP 2020 aims to empower students by giving them choice and flexibility, focusing on skill development, and fostering research at all levels.
+                </p>
+            </div>
+        </div>
+
+        <!-- Key Pillars -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center p-3">
+                    <div class="mb-3 text-danger fs-1"><i class="fas fa-university"></i></div>
+                    <h6 class="fw-bold">4-Year Degree Programs</h6>
+                    <p class="text-muted small mb-0">Undergraduate programs with multiple entry and exit options (Certificate, Diploma, Degree, and Honors).</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center p-3">
+                    <div class="mb-3 text-danger fs-1"><i class="fas fa-wallet"></i></div>
+                    <h6 class="fw-bold">Academic Bank of Credits</h6>
+                    <p class="text-muted small mb-0">Digital integration with ABC portal to securely store academic credits earned by students.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center p-3">
+                    <div class="mb-3 text-danger fs-1"><i class="fas fa-puzzle-piece"></i></div>
+                    <h6 class="fw-bold">Multidisciplinary Choices</h6>
+                    <p class="text-muted small mb-0">Opportunity for science students to study arts subjects and vice versa through open electives.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm text-center p-3">
+                    <div class="mb-3 text-danger fs-1"><i class="fas fa-tools"></i></div>
+                    <h6 class="fw-bold">Skill &amp; Vocations</h6>
+                    <p class="text-muted small mb-0">Mandatory skill enhancement courses to bridge the gap between academic theory and job market readiness.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Curriculum Structure -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h3 class="fw-bold mb-4" style="color: #E61013;">NEP UG Program Structure</h3>
+                <div class="table-responsive shadow-sm rounded">
+                    <table class="table table-bordered table-hover align-middle mb-0">
+                        <thead class="table-danger text-dark">
+                            <tr>
+                                <th>Exit Point</th>
+                                <th>Duration</th>
+                                <th>Credential Awarded</th>
+                                <th>Min. Credits Required</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <strong><td>Exit after Year 1</td></strong>
+                                <td>2 Semesters</td>
+                                <td>UG Certificate</td>
+                                <td>40 - 44 Credits</td>
+                            </tr>
+                            <tr>
+                                <strong><td>Exit after Year 2</td></strong>
+                                <td>4 Semesters</td>
+                                <td>UG Diploma</td>
+                                <td>80 - 88 Credits</td>
+                            </tr>
+                            <tr>
+                                <strong><td>Exit after Year 3</td></strong>
+                                <td>6 Semesters</td>
+                                <td>Bachelor's Degree</td>
+                                <td>120 - 132 Credits</td>
+                            </tr>
+                            <tr>
+                                <strong><td>Complete Year 4</td></strong>
+                                <td>8 Semesters</td>
+                                <td>Bachelor's Degree (Honors / with Research)</td>
+                                <td>160 - 176 Credits</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Roadmap -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header text-white fw-bold fs-5" style="background-color: #E61013;">
+                        <i class="fas fa-road me-2"></i> NEP Student Checklist &amp; Action Plan
+                    </div>
+                    <div class="card-body bg-light">
+                        <ol class="list-group list-group-numbered list-group-flush bg-transparent">
+                            <li class="list-group-item bg-transparent text-muted">Register on the ABC (Academic Bank of Credits) portal to get your unique ABC ID.</li>
+                            <li class="list-group-item bg-transparent text-muted">Choose your Major and Minor courses during admission counseling.</li>
+                            <li class="list-group-item bg-transparent text-muted">Select your Multi-Disciplinary Course (MDC) and Skill Enhancement Course (SEC) based on interest.</li>
+                            <li class="list-group-item bg-transparent text-muted">Participate in Internship / Apprenticeship / Community Service during vacations.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

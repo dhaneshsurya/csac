@@ -1,0 +1,17 @@
+# Exclude backup directories
+csac_portal - Copy/
+
+# Python compile cache
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# OS generated files
+.DS_Store
+Thumbs.db

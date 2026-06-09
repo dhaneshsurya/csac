@@ -1,0 +1,425 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{% block title %}{{ page_title }} - Chaitanya Science and Arts College{% endblock %}</title>
+<link href="{% static 'assets/images/favicon.png' %}" rel="shortcut icon" type="image/x-icon"/>
+<link href="{% static 'assets/css/plugins/animate.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/plugins/fontawesome.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/vendor/bootstrap.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/plugins/swiper.min.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/vendor/magnific-popup.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/vendor/metismenu.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/plugins/nice-select.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/plugins/jquery-ui.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/style04.css' %}" rel="stylesheet"/>
+<link href="{% static 'assets/css/academic_minimal.css' %}" rel="stylesheet"/>
+<style>
+.navbar-top{display:flex;justify-content:center;align-items:center;height:auto;padding:1px;background-color:#f8f9fa;font-family:"Roboto Slab",serif;letter-spacing:2px}
+.logo img{width:170px;height:110px;padding-right:50px;display:block}
+.content{text-align:center;font-family:"Roboto Slab",serif}
+.title-large{margin:0;font-size:24px;font-weight:bold;font-family:"Roboto Slab",serif;color:#E61013}
+.title-medium{margin:0;font-size:20px;font-family:"Roboto Slab",serif;font-weight:bold;color:black}
+.subheading{margin:0;font-size:16px;color:black;font-family:"Roboto Slab",serif}
+.logos-right{display:flex;gap:10px}
+.logos-right img{height:100px;width:auto}
+.mobile-only{display:none}
+.fixed-height-image{height:500px;object-fit:cover;width:100%}
+.caption{position:absolute;text-align:center;bottom:10px;left:10px;color:white;background-color:rgba(0,0,0,0.5);padding:5px}
+.banner__content__slide__item{position:relative}
+mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weight:500}
+.search-bar-container{display:flex;justify-content:left;padding:10px 0}
+.search-bar-form{display:flex;width:80%;max-width:700px;border:2px solid #E80E11;border-radius:8px;overflow:hidden;box-shadow:0 2px 5px rgba(0,123,255,.2)}
+.search-bar-form input[type=text]{flex-grow:1;padding:12px 16px;border:none;font-size:14px;outline:none}
+.search-bar-form button{padding:12px 24px;background-color:#E80E11;color:white;font-size:14px;border:none;cursor:pointer}
+.popup{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:white;background-color:#890C25;padding:20px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,.5);z-index:9999}
+.close-btn{position:absolute;top:5px;right:10px;cursor:pointer}
+.nameplate-container{display:flex;align-items:center;margin-top:15px}
+.nameplate-img{width:120px;height:120px;border-radius:50%;object-fit:cover;margin-right:10px}
+@media only screen and (max-width:768px){.navbar-top{flex-direction:column;align-items:flex-start;margin:15px 10px}.logo img{display:none}.title-large{font-size:18px}.title-medium{font-size:16px}.subheading{font-size:14px}}
+@media only screen and (min-width:1201px){.header__right{display:none}}
+@media (max-width:1200px){.mobile-only{display:block}}
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- College Header Bar -->
+<div class="navbar-top">
+  <div class="logo">
+    <img alt="Logo" src="{% if site_settings %}{{ site_settings.get_college_logo }}{% else %}{% static 'assets/csac_pmg.svg' %}{% endif %}"/>
+  </div>
+  <div class="content">
+    {% if site_settings %}
+    <p class="title-large">{{ site_settings.college_name_hi }}</p>
+    <p class="title-large">{{ site_settings.college_name_en|upper }}</p>
+    <p class="title-medium">{{ site_settings.address_line1 }}</p>
+    <p class="subheading">{{ site_settings.address_line2 }}</p>
+    <p class="subheading" style="color:#E61013;font-weight:bold;">{{ site_settings.tagline }}</p>
+    {% else %}
+    <p class="title-large">चैतन्य विज्ञान एवं कला महाविद्यालय, पामगढ़</p>
+    <p class="title-large">CHAITANYA SCIENCE AND ARTS COLLEGE</p>
+    <p class="title-medium">PAMGARH, JANJGIR-CHAMPA (C.G.), 495554</p>
+    <p class="subheading">Affiliated to Shaheed Nandkumar Patel Vishwavidyalaya, Raigarh, Chhattisgarh, India</p>
+    <p class="subheading" style="color:#E61013;font-weight:bold;">An Autonomous College, Approved by UGC &nbsp; Accredited with Grade "A" by NAAC</p>
+    {% endif %}
+  </div>
+  <div class="logos-right">
+    <img alt="NAAC A" src="{% if site_settings %}{{ site_settings.get_logo2 }}{% else %}{% static 'assets/images/logo_naac_a.png' %}{% endif %}"/>
+    <img alt="Logo 1" src="{% if site_settings %}{{ site_settings.get_logo3 }}{% else %}{% static 'assets/images/logo_2.png' %}{% endif %}"/>
+    <img alt="Logo 2" src="{% if site_settings %}{{ site_settings.get_logo4 }}{% else %}{% static 'assets/images/logo_3.png' %}{% endif %}"/>
+    <img alt="Logo 3" src="{% if site_settings %}{{ site_settings.get_logo5 }}{% else %}{% static 'assets/images/logo_4.png' %}{% endif %}"/>
+  </div>
+</div>
+
+<!-- Main Navigation -->
+<header class="header v__5 header__sticky" style="background-color:#E61013;color:white">
+  <div class="container-fluid" style="justify-content:center;">
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="header__wrapper">
+          <div class="header__logo mobile-only">
+            <a class="header__logo--link" href="{% url 'core:home' %}">
+              <img alt="Chaitanya" src="{% if site_settings %}{{ site_settings.get_mobile_logo }}{% else %}{% static 'assets/csac_mobile.svg' %}{% endif %}"/>
+            </a>
+          </div>
+          <div class="header__menu">
+            <div class="navigation">
+              <nav class="navigation__menu">
+                <ul>
+                  <li class="navigation__menu--item">
+                    <a class="navigation__menu--item__link" href="{% url 'core:home' %}">Home</a>
+                  </li>
+                  <li class="navigation__menu--item has-child has-arrow">
+                    <a class="navigation__menu--item__link" href="{% url 'core:about' %}">About Us</a>
+                    <ul class="submenu sub__style">
+                      <li><a href="{% url 'core:about' %}">About Institute</a></li>
+                      <li><a href="{% url 'core:recognition' %}">Achievements &amp; Recognition</a></li>
+                      <li class="has-child has-arrow">
+                        <a href="#">Staff</a>
+                        <ul class="sub__style">
+                          <li><a href="{% url 'core:staff_teaching' %}">Teaching</a></li>
+                          <li><a href="{% url 'core:staff_nonteaching' %}">Non-Teaching</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="{% url 'core:committees' %}">Committees</a></li>
+                      <li><a href="{% url 'core:policies' %}">Policies</a></li>
+                    </ul>
+                  </li>
+                  <li class="navigation__menu--item has-child has-arrow">
+                    <a class="navigation__menu--item__link" href="{% url 'academics:programs' %}">Academics</a>
+                    <ul class="submenu sub__style">
+                      <li class="has-child has-arrow">
+                        <a href="#">Arts</a>
+                        <ul class="sub__style">
+                          <li><a href="{% url 'academics:department_detail' 'hindi' %}">Hindi</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'english' %}">English</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'sociology' %}">Sociology</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'geography' %}">Geography</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'social-work' %}">Social Work</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'political-science' %}">Political Science</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'history' %}">History</a></li>
+                        </ul>
+                      </li>
+                      <li class="has-child has-arrow">
+                        <a href="#">Science</a>
+                        <ul class="sub__style">
+                          <li><a href="{% url 'academics:department_detail' 'zoology' %}">Zoology</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'physics' %}">Physics</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'chemistry' %}">Chemistry</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'mathematics' %}">Mathematics</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'botany' %}">Botany</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'forestry' %}">Forestry</a></li>
+                          <li><a href="{% url 'academics:department_detail' 'computer-science' %}">Computer Science</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="{% url 'academics:programs' %}">Programs Offered</a></li>
+                      <li><a href="{% url 'core:co_po' %}">CO PO</a></li>
+                      <li><a href="{% url 'academics:academic_calendar' %}">Academic Calendar</a></li>
+                    </ul>
+                  </li>
+                  <li class="navigation__menu--item has-child has-arrow">
+                    <a class="navigation__menu--item__link" href="{% url 'students:admission' %}">Student Corner</a>
+                    <ul class="submenu sub__style">
+                      <li><a href="{% url 'students:admission' %}">Admission Procedure</a></li>
+                      <li><a href="https://www.snpvraigarh.in/" target="_blank">University Admission</a></li>
+                      <li><a href="{% url 'students:online_admission' %}">Online Admission</a></li>
+                      <li><a href="{% url 'students:fee_structure' %}">Fee Structure</a></li>
+                      <li><a href="https://www.snpvraigarh.in/" target="_blank">Result</a></li>
+                      <li><a href="{% url 'students:scholarship' %}">Scholarship</a></li>
+                      <li><a href="{% url 'students:library' %}">Library</a></li>
+                      <li><a href="{% url 'students:alumni' %}">Alumni</a></li>
+                      <li><a href="{% url 'students:merit_list' %}">Merit List</a></li>
+                    </ul>
+                  </li>
+                  <li class="navigation__menu--item has-child has-arrow">
+                    <a class="navigation__menu--item__link" href="{% url 'naac:naac_home' %}">NAAC</a>
+                    <ul class="submenu sub__style">
+                      <li><a href="{% url 'naac:naac_home' %}">NAAC</a></li>
+                      <li class="has-child has-arrow">
+                        <a href="{% url 'naac:iqac' %}">IQAC</a>
+                        <ul class="sub__style">
+                          <li><a href="{% url 'naac:iiqa' %}">IIQA</a></li>
+                          <li><a href="{% url 'naac:ssr' %}">SSR</a></li>
+                          <li><a href="{% url 'naac:dvv' %}">DVV</a></li>
+                          <li><a href="{% url 'naac:atr' %}">ATR</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="navigation__menu--item has-child has-arrow">
+                    <a class="navigation__menu--item__link" href="#">Feedback</a>
+                    <ul class="submenu sub__style">
+                      <li><a href="{% url 'feedback:student_feedback' %}">Student's Feedback</a></li>
+                      <li><a href="{% url 'feedback:parent_feedback' %}">Parent's Feedback</a></li>
+                      <li><a href="{% url 'feedback:faculty_feedback' %}">Faculty's Feedback</a></li>
+                      <li><a href="{% url 'feedback:alumni_feedback' %}">Alumni's Feedback</a></li>
+                    </ul>
+                  </li>
+                  <li class="navigation__menu--item has-child has-arrow">
+                    <a class="navigation__menu--item__link" href="#">Grievances</a>
+                    <ul class="submenu sub__style">
+                      <li><a href="{% url 'grievances:anti_ragging' %}">Anti Ragging Committee</a></li>
+                      <li><a href="{% url 'grievances:icc' %}">Internal Complaints Committee (ICC)</a></li>
+                      <li><a href="{% url 'grievances:redressal' %}">Grievance Redressal Committee</a></li>
+                      <li><a href="{% url 'grievances:submit_grievance' %}">Submit a Grievance</a></li>
+                    </ul>
+                  </li>
+                  <li class="navigation__menu--item">
+                    <a class="navigation__menu--item__link" href="{% url 'core:ugc' %}">UGC</a>
+                  </li>
+                  <li class="navigation__menu--item has-child has-arrow">
+                    <a class="navigation__menu--item__link" href="#">Gallery</a>
+                    <ul class="submenu sub__style">
+                      <li><a href="{% url 'gallery:image_gallery' %}">Image Gallery</a></li>
+                      <li><a href="{% url 'gallery:video_gallery' %}">Video Gallery</a></li>
+                      <li><a href="{% url 'gallery:news_gallery' %}">News Gallery</a></li>
+                    </ul>
+                  </li>
+                  <li class="navigation__menu--item">
+                    <a class="navigation__menu--item__link" href="https://chaitanyapamgarh.onlineexamforms.com/student.aspx" target="_blank">Student Login</a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div class="header__right">
+            <div class="header__right--item">
+              <div class="menu__trigger" id="menu-btn">
+                <img alt="bar" src="{% static 'assets/images/icon/menu__bar-2.svg' %}"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Marquee Notices -->
+{% if marquee_notices %}
+<div class="marquee">
+  <div class="single__marque__item" style="height:30px;background-color:black;">
+    <ul class="single__marque__item__list">
+      {% for notice in marquee_notices %}
+      <li class="single__marque__item__list__text" style="font-family:Roboto Slab,serif;font-size:18px;color:white">
+        {% if notice.flag %}
+        <span class="marquee-badge" style="background: linear-gradient(135deg, #e61013, #b71a34); color: white; padding: 2px 8px; margin-right: 4px; border-radius: 4px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 0 5px rgba(230,16,19,0.5); vertical-align: middle; display: inline-block;">{{ notice.flag }}</span>
+        {% endif %}
+        {% if notice.link %}<a href="{{ notice.link }}" style="color:white;">{{ notice.text }}</a>{% else %}{{ notice.text }}{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    <ul class="single__marque__item__list" style="height:30px;background-color:black;">
+      {% for notice in marquee_notices %}
+      <li class="single__marque__item__list__text" style="font-family:Roboto Slab,serif;font-size:18px;color:white">
+        {% if notice.flag %}
+        <span class="marquee-badge" style="background: linear-gradient(135deg, #e61013, #b71a34); color: white; padding: 2px 8px; margin-right: 4px; border-radius: 4px; font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 0 5px rgba(230,16,19,0.5); vertical-align: middle; display: inline-block;">{{ notice.flag }}</span>
+        {% endif %}
+        {% if notice.link %}<a href="{{ notice.link }}" style="color:white;">{{ notice.text }}</a>{% else %}{{ notice.text }}{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endif %}
+
+<!-- Django Messages -->
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- Main Content -->
+{% block content %}{% endblock %}
+
+<!-- Footer -->
+<footer class="footer v__1" style="background-color:#f8f9fa">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="footer__widget">
+          <div class="footer__widget--logo">
+            <a href="{% url 'core:home' %}"><img alt="logo" src="{% if site_settings %}{{ site_settings.get_college_logo }}{% else %}{% static 'assets/csac_pmg.svg' %}{% endif %}" width="130"/></a>
+          </div>
+          <p class="footer__widget--description">Explore Boundless Opportunities at Chaitanya Science and Arts College, Knowledge meets innovation here.</p>
+          <div class="footer__widget--social">
+            <ul class="social">
+              {% if site_settings and site_settings.facebook_url %}
+              <li class="social__link"><a href="{{ site_settings.facebook_url }}"><i class="fa-brands fa-facebook"></i></a></li>
+              {% endif %}
+              {% if site_settings and site_settings.youtube_url %}
+              <li class="social__link"><a href="{{ site_settings.youtube_url }}"><i class="fa-brands fa-youtube"></i></a></li>
+              {% endif %}
+              {% if site_settings and site_settings.instagram_url %}
+              <li class="social__link"><a href="{{ site_settings.instagram_url }}"><i class="fa-brands fa-instagram"></i></a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="footer__widget">
+          <h6 class="footer__widget--title" style="color:black;">Important Links</h6>
+          <div class="footer__widget--menu">
+            <ul>
+              {% for link in important_links %}
+              <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+              {% empty %}
+              <li><a href="http://www.snpv.ac.in">www.snpv.ac.in</a></li>
+              <li><a href="https://www.ugc.gov.in/">www.ugc.gov.in</a></li>
+              <li><a href="http://www.naac.gov.in">www.naac.gov.in</a></li>
+              <li><a href="https://www.abc.gov.in/">www.abc.gov.in</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6 col-sm-6">
+        <div class="footer__widget">
+          <h6 class="footer__widget--title" style="color:black;">Quick Links</h6>
+          <div class="footer__widget--menu">
+            <ul>
+              {% for link in quick_links %}
+              <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+              {% empty %}
+              <li><a href="{% url 'students:online_admission' %}">Admission Online</a></li>
+              <li><a href="{% url 'core:notices' %}">Notices</a></li>
+              <li><a href="{% url 'core:nep' %}">NEP 2020</a></li>
+              <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="footer__widget">
+          <h6 class="footer__widget--title" style="color:black;">Address</h6>
+          {% if site_settings and site_settings.google_maps_embed %}
+          <iframe allowfullscreen="" height="150" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="{{ site_settings.google_maps_embed }}" style="border:0;" width="100%"></iframe>
+          {% else %}
+          <iframe allowfullscreen="" height="150" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3702.645182693546!2d82.44566047479239!3d21.87121777999742!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a27cf617fc4296d%3A0x953b038528c66828!2sChaitanya%20Science%20and%20Arts%20College%2C%20Pamgarh!5e0!3m2!1sen!2sin!4v1724811425906!5m2!1sen!2sin" style="border:0;" width="100%"></iframe>
+          {% endif %}
+          <p>
+            {% if site_settings %}{{ site_settings.address_line1 }}<br/>{{ site_settings.address_line2 }}<br/>
+            Email: {{ site_settings.email }}<br/>Mob: {{ site_settings.phone }}
+            {% else %}Chaitanya Science and Arts College, Pamgarh, Janjgir Champa, CG - 495554<br/>
+            Email: chaitanyapamgarh@gmail.com<br/>Mob: +91-9425540666{% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="rts-footer-copy-right v_1">
+  <div class="container">
+    <div class="row">
+      <div class="rt-center">
+        <p class="--p-xs">Copyright &copy; 2024 All Rights Reserved by <a href="{% url 'core:home' %}">Chaitanya Science and Arts College, Pamgarh</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Side Menu -->
+<div class="side-bar" id="side-bar">
+  <button class="close-icon-menu"><i class="far fa-times"></i></button>
+  <div class="mobile-menu-main">
+    <nav class="nav-main mainmenu-nav mt--30">
+      <ul class="mainmenu metismenu" id="mobile-menu-active">
+        <li><a class="main" href="{% url 'core:home' %}">Home</a></li>
+        <li class="has-droupdown">
+          <a class="main">About Us</a>
+          <ul class="submenu mm-collapse">
+            <li><a class="mobile-menu-link" href="{% url 'core:about' %}">About Chaitanya College</a></li>
+            <li><a href="{% url 'core:staff_teaching' %}">Teaching Staff</a></li>
+            <li><a href="{% url 'core:committees' %}">Committees</a></li>
+            <li><a href="{% url 'core:policies' %}">Policies</a></li>
+          </ul>
+        </li>
+        <li class="has-droupdown">
+          <a class="main">Academics</a>
+          <ul class="submenu mm-collapse">
+            <li><a href="{% url 'academics:programs' %}">Programs Offered</a></li>
+            <li><a href="{% url 'academics:academic_calendar' %}">Academic Calendar</a></li>
+          </ul>
+        </li>
+        <li class="has-droupdown">
+          <a class="main">Student Corner</a>
+          <ul class="submenu mm-collapse">
+            <li><a href="{% url 'students:admission' %}">Admission</a></li>
+            <li><a href="{% url 'students:online_admission' %}">Online Admission</a></li>
+            <li><a href="{% url 'students:fee_structure' %}">Fee Structure</a></li>
+            <li><a href="{% url 'students:scholarship' %}">Scholarship</a></li>
+            <li><a href="{% url 'students:library' %}">Library</a></li>
+          </ul>
+        </li>
+        <li><a class="main" href="{% url 'naac:naac_home' %}">NAAC</a></li>
+        <li class="has-droupdown">
+          <a class="main">Feedback</a>
+          <ul class="submenu mm-collapse">
+            <li><a href="{% url 'feedback:student_feedback' %}">Student Feedback</a></li>
+            <li><a href="{% url 'feedback:parent_feedback' %}">Parent Feedback</a></li>
+            <li><a href="{% url 'feedback:faculty_feedback' %}">Faculty Feedback</a></li>
+            <li><a href="{% url 'feedback:alumni_feedback' %}">Alumni Feedback</a></li>
+          </ul>
+        </li>
+        <li><a class="main" href="{% url 'grievances:submit_grievance' %}">Submit Grievance</a></li>
+        <li><a class="main" href="{% url 'gallery:image_gallery' %}">Gallery</a></li>
+        <li><a class="main" href="{% url 'core:contact' %}">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<div class="" id="anywhere-home"></div>
+
+<!-- JS Files -->
+<script src="{% static 'assets/js/vendor/jquery.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/js/vendor/jquery-ui.js' %}"></script>
+<script src="{% static 'assets/js/vendor/waw.js' %}"></script>
+<script src="{% static 'assets/js/vendor/metismenu.js' %}"></script>
+<script src="{% static 'assets/js/vendor/magnifying-popup.js' %}"></script>
+<script src="{% static 'assets/js/plugins/swiper.js' %}"></script>
+<script src="{% static 'assets/js/plugins/counterup.js' %}"></script>
+<script src="{% static 'assets/js/vendor/waypoint.js' %}"></script>
+<script src="{% static 'assets/js/plugins/isotop.js' %}"></script>
+<script src="{% static 'assets/js/plugins/imagesloaded.pkgd.min.js' %}"></script>
+<script src="{% static 'assets/js/plugins/sticky-sidebar.js' %}"></script>
+<script src="{% static 'assets/js/plugins/resize-sensor.js' %}"></script>
+<script src="{% static 'assets/js/plugins/twinmax.js' %}"></script>
+<script src="{% static 'assets/js/plugins/contact.form.js' %}"></script>
+<script src="{% static 'assets/js/plugins/nice-select.min.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

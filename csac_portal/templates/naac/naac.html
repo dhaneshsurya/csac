@@ -1,0 +1,142 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- Breadcrumb Section -->
+<section class="rts-breadcrumb breadcrumb-height breadcumb-bg" style="{% with bcimg=breadcrumb_images.naac_home %}{% if bcimg %}background-image: url('{{ bcimg }}');{% endif %}{% endwith %}">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb-content">
+                    <h2 class="section-title">{{ breadcrumb }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NAAC Section -->
+<section class="rts-section-padding py-5">
+    <div class="container">
+
+        <!-- NAAC Info Summary Card -->
+        <div class="row mb-5 align-items-center">
+            <div class="col-lg-7">
+                <h2 class="fw-bold mb-3" style="color: #E61013;">NAAC Accreditation</h2>
+                <p class="text-muted lh-lg fs-6">
+                    Chaitanya Science and Arts College has been accredited by the National Assessment and Accreditation Council (NAAC) with a distinguished grade. NAAC evaluates higher education institutions for overall quality, performance, curriculum, teaching-learning processes, research, infrastructure, and governance.
+                </p>
+                <div class="text-muted lh-lg fs-6">
+                    {{ naac_info.description|safe|linebreaks }}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card border-0 shadow text-center p-4" style="border-top: 5px solid #E61013 !important;">
+                    <div class="card-body">
+                        <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3 text-white fw-bold" style="width: 90px; height: 90px; background-color: #E61013; font-size: 2.5rem;">
+                            {{ naac_info.grade|default:"A" }}
+                        </div>
+                        <h4 class="fw-bold text-dark mb-1">Grade "{{ naac_info.grade|default:"A" }}" Accredited</h4>
+                        {% if naac_info.cgpa %}
+                            <h6 class="text-danger fw-bold mb-3">CGPA: {{ naac_info.cgpa }}</h6>
+                        {% endif %}
+                        <div class="border-top pt-3 text-start small text-muted lh-sm">
+                            {% if naac_info.accreditation_date %}
+                                <div class="mb-2"><strong>Accredited On:</strong> {{ naac_info.accreditation_date }}</div>
+                            {% endif %}
+                            {% if naac_info.valid_until %}
+                                <div><strong>Valid Until:</strong> {{ naac_info.valid_until }}</div>
+                            {% endif %}
+                        </div>
+                        {% if naac_info.certificate_image %}
+                            <div class="mt-4">
+                                <a href="{{ naac_info.certificate_image.url }}" class="btn btn-sm btn-outline-danger w-100" target="_blank">
+                                    <i class="fas fa-file-image me-2"></i>View Accreditation Certificate
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAAC Criteria Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <h3 class="fw-bold mb-4" style="color: #E61013;"><i class="fas fa-list-ol me-2"></i> NAAC Assessment Criteria (SSR Documents)</h3>
+                {% if criteria %}
+                <div class="table-responsive shadow-sm border bg-white rounded">
+                    <table class="table table-bordered table-hover align-middle mb-0">
+                        <thead class="table-danger text-dark">
+                            <tr>
+                                <th class="text-center" style="width: 100px;">Criterion</th>
+                                <th>Focus Area / Description</th>
+                                <th class="text-center" style="width: 160px;">Criterion Document</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for criterion in criteria %}
+                            <tr>
+                                <td class="text-center fw-bold text-danger">Criterion {{ criterion.criterion_number }}</td>
+                                <td>
+                                    <h6 class="fw-bold mb-1 text-dark">{{ criterion.title }}</h6>
+                                    <p class="text-muted small mb-0">{{ criterion.description }}</p>
+                                </td>
+                                <td class="text-center">
+                                    {% if criterion.document %}
+                                        <a href="{{ criterion.document.url }}" class="btn btn-sm btn-danger px-3" download>
+                                            <i class="fas fa-download me-1"></i> Download
+                                        </a>
+                                    {% elif criterion.document_url %}
+                                        <a href="{{ criterion.document_url }}" class="btn btn-sm btn-outline-danger px-3" target="_blank">
+                                            <i class="fas fa-external-link-alt me-1"></i> View URL
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">Pending Upload</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-secondary border-0 shadow-sm">No specific criteria information is registered in the database.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- General NAAC Documents -->
+        <div class="row">
+            <div class="col-12">
+                <h3 class="fw-bold mb-4" style="color: #E61013;"><i class="fas fa-file-pdf me-2"></i> General NAAC Documents &amp; Certificates</h3>
+                {% if general_docs %}
+                <div class="row g-4">
+                    {% for doc in general_docs %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm bg-light">
+                            <div class="card-body p-4 d-flex align-items-start">
+                                <div class="text-danger fs-1 me-3"><i class="fas fa-file-pdf"></i></div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1">{{ doc.title }}</h6>
+                                    <p class="text-muted small mb-3">{{ doc.description }}</p>
+                                    <a href="{{ doc.get_file }}" class="btn btn-sm btn-danger px-3" download>
+                                        <i class="fas fa-download me-1"></i> Download File
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-secondary border-0 shadow-sm">No general NAAC documents uploaded yet.</div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
