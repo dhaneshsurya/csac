@@ -773,3 +773,11 @@ class MenuItemAdmin(admin.ModelAdmin):
     list_filter = ('is_active', 'open_in_new_tab', 'parent')
     list_editable = ('order', 'is_active', 'open_in_new_tab')
     search_fields = ('title', 'url')
+
+
+from .models import VisitorCount
+
+@admin.register(VisitorCount)
+class VisitorCountAdmin(admin.ModelAdmin):
+    list_display = ('count',)
+

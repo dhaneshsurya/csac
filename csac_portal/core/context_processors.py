@@ -109,6 +109,20 @@ def site_context(request):
     except Exception:
         navbar_menu = []
 
+    # Visitor counter logic
+    visitor_count = 0
+    try:
+        from django.db.models import F
+        from .models import VisitorCount
+        vc, created = VisitorCount.objects.get_or_create(id=1)
+        if not request.session.get('has_visited'):
+            request.session['has_visited'] = True
+            VisitorCount.objects.filter(id=1).update(count=F('count') + 1)
+            vc.refresh_from_db()
+        visitor_count = vc.count
+    except Exception:
+        pass
+
     return {
         'site_settings': settings_obj,
         'marquee_notices': combined_marquee,
@@ -116,4 +130,6 @@ def site_context(request):
         'quick_links': quick_links,
         'breadcrumb_images': breadcrumb_images,
         'navbar_menu': navbar_menu,
+        'visitor_count': visitor_count,
     }
+

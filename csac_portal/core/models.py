@@ -1498,3 +1498,15 @@ class MenuItem(models.Model):
             except NoReverseMatch:
                 return self.url
         return self.url
+
+
+class VisitorCount(models.Model):
+    count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Visitor Count"
+        verbose_name_plural = "Visitor Count"
+
+    def __str__(self):
+        return f"Total Visitors: {self.count}"
+

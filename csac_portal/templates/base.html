@@ -298,6 +298,11 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
       <div class="col-12">
         <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 text-center">
           <p class="--p-xs mb-0">Copyright &copy; {% now "Y" %} All Rights Reserved by <a href="{% url 'core:home' %}">Chaitanya Science and Arts College, Pamgarh</a></p>
+          <span class="mx-2 text-muted">|</span>
+          <p class="--p-xs mb-0 d-flex align-items-center gap-1 text-muted">
+            <i class="far fa-eye text-primary"></i>
+            <span>Visitor Count: <strong class="text-white">{{ visitor_count }}</strong></span>
+          </p>
         </div>
       </div>
     </div>
