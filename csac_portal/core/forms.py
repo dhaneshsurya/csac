@@ -737,3 +737,22 @@ class LeadershipForm(forms.ModelForm):
                 existing_classes = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
 
+
+from .models import UploadedDocument
+
+class UploadedDocumentForm(forms.ModelForm):
+    class Meta:
+        model = UploadedDocument
+        fields = ['title', 'file']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name != 'file':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+            else:
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control-file".strip()
+
+

@@ -781,3 +781,27 @@ from .models import VisitorCount
 class VisitorCountAdmin(admin.ModelAdmin):
     list_display = ('count',)
 
+
+from .models import UploadedDocument
+
+@admin.register(UploadedDocument)
+class UploadedDocumentAdmin(admin.ModelAdmin):
+    list_display = ('title', 'uploaded_at', 'get_file_link')
+    readonly_fields = ('direct_link',)
+
+    def get_file_link(self, obj):
+        if obj.file:
+            return format_html('<a href="{}" target="_blank">View File</a>', obj.file.url)
+        return "-"
+    get_file_link.short_description = "Link"
+
+    def direct_link(self, obj):
+        if obj.file:
+            return format_html(
+                '<input type="text" value="{}" readonly style="width: 70%; padding: 6px; font-family: monospace;" onclick="this.select(); document.execCommand(\'copy\'); alert(\'Copied to clipboard!\');"> <small style="color: #666;">(Click to select/copy)</small>',
+                obj.file.url
+            )
+        return "Save the document first to generate a link."
+    direct_link.short_description = "Direct File URL"
+
+

@@ -899,3 +899,35 @@ def edit_leadership(request, role):
     return render(request, 'core/edit_leadership.html', context)
 
 
+@staff_required
+def manage_documents(request):
+    from .models import UploadedDocument
+    from .forms import UploadedDocumentForm
+    
+    if request.method == 'POST':
+        form = UploadedDocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            doc = form.save()
+            messages.success(request, f"Document '{doc.title}' uploaded successfully!")
+            return redirect('core:manage_documents')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Error in {field}: {error}")
+    else:
+        form = UploadedDocumentForm()
+        
+    documents = UploadedDocument.objects.all()
+    host_prefix = f"{request.scheme}://{request.get_host()}"
+    
+    context = {
+        'form': form,
+        'documents': documents,
+        'host_prefix': host_prefix,
+        'page_title': 'Document Uploader',
+        'breadcrumb': 'Manage Documents',
+    }
+    return render(request, 'core/manage_documents.html', context)
+
+
+

@@ -1521,3 +1521,18 @@ class VisitorCount(models.Model):
     def __str__(self):
         return f"Total Visitors: {self.count}"
 
+
+class UploadedDocument(models.Model):
+    title = models.CharField(max_length=200, help_text="Enter a name/title for the document")
+    file = models.FileField(upload_to='documents/', help_text="Choose the PDF, Doc, or Image file")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-uploaded_at']
+        verbose_name = "Uploaded Document"
+        verbose_name_plural = "Uploaded Documents"
+
+    def __str__(self):
+        return self.title
+
+
