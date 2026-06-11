@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block extra_css %}
@@ -38,7 +38,7 @@
     .gallery-item:hover {
         transform: translateY(-4px);
         border-color: #c4ceda;
-        box-shadow: 0 8px 25px rgba(230, 16, 19, 0.15);
+        box-shadow: 0 8px 25px rgba(183, 26, 52, 0.15);
     }
     .gallery-item:hover img {
         transform: scale(1.02);
@@ -116,9 +116,9 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-12 text-center">
-                <h2 class="fw-bold mb-3" style="color: #E61013; font-size: 36px;">Our Recognitions</h2>
+                <h2 class="fw-bold mb-3" style="color: #B71A34; font-size: 36px;">Our Recognitions</h2>
                 <p class="text-muted fs-6">Official approvals, recognitions, and certifications of Chaitanya Science and Arts College</p>
-                <div class="mx-auto" style="width: 80px; height: 3px; background-color: #E61013;"></div>
+                <div class="mx-auto" style="width: 80px; height: 3px; background-color: #B71A34;"></div>
             </div>
         </div>
         
@@ -142,9 +142,9 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-12 text-center">
-                <h3 class="fw-bold mb-3" style="color: #E61013; font-size: 32px;">Student Achievements</h3>
+                <h3 class="fw-bold mb-3" style="color: #B71A34; font-size: 32px;">Student Achievements</h3>
                 <p class="text-muted">Milestones and accolades accomplished by our dynamic student community</p>
-                <div class="mx-auto" style="width: 60px; height: 3px; background-color: #E61013;"></div>
+                <div class="mx-auto" style="width: 60px; height: 3px; background-color: #B71A34;"></div>
             </div>
         </div>
 
@@ -153,10 +153,10 @@
             <div class="col-sm-6 col-lg-3">
                 <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
                     {% if achievement.image %}
-                        <img src="{{ achievement.image.url }}" class="card-img-top" alt="{{ achievement.title }}" style="height: 240px; object-fit: cover;">
+                        <img src="{{ achievement.image.url }}" class="card-img-top achievement-img" alt="{{ achievement.title }}" style="height: 240px; object-fit: cover; cursor: zoom-in;">
                     {% else %}
                         <div class="d-flex align-items-center justify-content-center bg-light" style="height: 240px;">
-                            <i class="fas fa-trophy fa-4x" style="color: #E61013; opacity: 0.3;"></i>
+                            <i class="fas fa-trophy fa-4x" style="color: #B71A34; opacity: 0.3;"></i>
                         </div>
                     {% endif %}
                     <div class="card-body text-center p-4">
@@ -190,7 +190,7 @@
         const lightboxImage = document.getElementById('lightboxImage');
         const lightboxClose = document.getElementById('lightboxClose');
 
-        document.querySelectorAll('.gallery-item img').forEach((image) => {
+        document.querySelectorAll('.gallery-item img, .achievement-img').forEach((image) => {
             image.addEventListener('click', () => {
                 lightboxImage.src = image.src;
                 lightboxImage.alt = image.alt;

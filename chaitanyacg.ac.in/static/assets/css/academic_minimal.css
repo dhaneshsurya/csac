@@ -333,6 +333,29 @@ header.header.v__5 .container-fluid {
     background-color: #ffffff !important;
     border-top: 1px solid #e5e7eb !important;
     border-bottom: 1px solid #e5e7eb !important;
+    padding: 60px 0 !important;
+}
+
+@media screen and (max-width: 768px) {
+    .rts-campus.v_2 {
+        padding: 40px 0 !important;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .rts-campus.v_2 .rts-right-section,
+    .rts-campus.v_2 .rts-right-section .campus-video {
+        margin-top: 0 !important;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .rts-campus.v_2 .rts-right-section {
+        margin-top: 24px !important;
+    }
+    .rts-campus.v_2 .rts-right-section .campus-video {
+        margin-top: 0 !important;
+    }
 }
 
 .rts-campus-bg.v_2 {

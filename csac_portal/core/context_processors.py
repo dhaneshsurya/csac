@@ -1,5 +1,5 @@
 from .models import SiteSettings, MarqueeNotice, ImportantLink, Notice
-from .models import BreadcrumbSettings, PageBreadcrumb
+from .models import BreadcrumbSettings, PageBreadcrumb, MenuItem
 
 
 def site_context(request):
@@ -98,9 +98,16 @@ def site_context(request):
         'gallery_images', 'gallery_videos', 'gallery_news',
         'feedback_student', 'feedback_parent', 'feedback_faculty', 'feedback_alumni',
         'grievances_anti_ragging', 'grievances_icc', 'grievances_redressal',
-        'grievances_submit', 'custom_page',
+        'grievances_submit', 'custom_page', 'infrastructure',
     ]
     breadcrumb_images = {k: _resolve(k) for k in _all_keys}
+
+    try:
+        from .utils import seed_default_menu_items
+        seed_default_menu_items()
+        navbar_menu = MenuItem.objects.filter(parent=None, is_active=True).prefetch_related('children', 'children__children')
+    except Exception:
+        navbar_menu = []
 
     return {
         'site_settings': settings_obj,
@@ -108,4 +115,5 @@ def site_context(request):
         'important_links': important_links,
         'quick_links': quick_links,
         'breadcrumb_images': breadcrumb_images,
+        'navbar_menu': navbar_menu,
     }

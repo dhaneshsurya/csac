@@ -5,7 +5,13 @@ from .models import (
     Policy, Notice, Event, UGCTable, UGCDocument,
     UGCPageSettings, UGCGrant, BreadcrumbSettings, PageBreadcrumb,
     NSSPageSettings, NSSActivity, NSSGalleryImage,
-    IICPageSettings, IICGalleryImage
+    IICPageSettings, IICGalleryImage, CampusMedia, Testimonial,
+    Infrastructure, InfrastructureImage, AccreditationLogo, QuickLinkCard,
+    Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
+    SportsPageSettings, SportsGalleryImage,
+    NEPTab, NEPTabFile, NEPTabLink,
+    LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
+    MenuItem
 )
 
 class CareerGuidanceForm(forms.ModelForm):
@@ -220,14 +226,41 @@ class SiteSettingsForm(forms.ModelForm):
     class Meta:
         model = SiteSettings
         fields = '__all__'
+        color_picker_style = 'width: 80px; height: 40px; border: 1px solid #ccc; border-radius: 4px; padding: 2px; cursor: pointer;'
         widgets = {
             'google_maps_embed': forms.Textarea(attrs={'rows': 4}),
+            
+            # Color pickers
+            'college_name_en_font_color': forms.TextInput(attrs={'type': 'color', 'style': color_picker_style}),
+            'college_name_hi_font_color': forms.TextInput(attrs={'type': 'color', 'style': color_picker_style}),
+            'tagline_font_color': forms.TextInput(attrs={'type': 'color', 'style': color_picker_style}),
+            'address_line1_font_color': forms.TextInput(attrs={'type': 'color', 'style': color_picker_style}),
+            'address_line2_font_color': forms.TextInput(attrs={'type': 'color', 'style': color_picker_style}),
+            
+            # Font family selections with datalists
+            'college_name_en_font_family': forms.TextInput(attrs={'list': 'font-families-datalist'}),
+            'college_name_hi_font_family': forms.TextInput(attrs={'list': 'font-families-datalist'}),
+            'tagline_font_family': forms.TextInput(attrs={'list': 'font-families-datalist'}),
+            'address_line1_font_family': forms.TextInput(attrs={'list': 'font-families-datalist'}),
+            'address_line2_font_family': forms.TextInput(attrs={'list': 'font-families-datalist'}),
+            
+            # Font size selections with datalists
+            'college_name_en_font_size': forms.TextInput(attrs={'list': 'font-sizes-datalist'}),
+            'college_name_hi_font_size': forms.TextInput(attrs={'list': 'font-sizes-datalist'}),
+            'tagline_font_size': forms.TextInput(attrs={'list': 'font-sizes-datalist'}),
+            'address_line1_font_size': forms.TextInput(attrs={'list': 'font-sizes-datalist'}),
+            'address_line2_font_size': forms.TextInput(attrs={'list': 'font-sizes-datalist'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        excluded_fields = [
+            'college_logo', 'college_logo_mobile', 'logo2', 'logo3', 'logo4', 'logo5',
+            'college_name_en_font_color', 'college_name_hi_font_color', 'tagline_font_color',
+            'address_line1_font_color', 'address_line2_font_color'
+        ]
         for field_name, field in self.fields.items():
-            if not isinstance(field.widget, forms.CheckboxInput) and field_name not in ['college_logo', 'college_logo_mobile', 'logo2', 'logo3', 'logo4', 'logo5']:
+            if not isinstance(field.widget, forms.CheckboxInput) and field_name not in excluded_fields:
                 existing_classes = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
 
@@ -330,4 +363,358 @@ class IICGalleryImageForm(forms.ModelForm):
                 field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
 
 
+class CampusMediaForm(forms.ModelForm):
+    class Meta:
+        model = CampusMedia
+        fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.CheckboxInput,)) and field_name != 'image':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+
+class TestimonialForm(forms.ModelForm):
+    class Meta:
+        model = Testimonial
+        fields = '__all__'
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 4}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.CheckboxInput,)) and field_name != 'photo':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class InfrastructureForm(forms.ModelForm):
+    class Meta:
+        model = Infrastructure
+        fields = '__all__'
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 5}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.CheckboxInput,)):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class InfrastructureImageForm(forms.ModelForm):
+    class Meta:
+        model = InfrastructureImage
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.CheckboxInput,)) and field_name != 'image':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class AccreditationLogoForm(forms.ModelForm):
+    class Meta:
+        model = AccreditationLogo
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.CheckboxInput,)) and field_name != 'image':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class QuickLinkCardForm(forms.ModelForm):
+    class Meta:
+        model = QuickLinkCard
+        fields = '__all__'
+        widgets = {
+            'bg_color': forms.TextInput(attrs={'type': 'color', 'style': 'width: 80px; height: 40px; border: 1px solid #ccc; border-radius: 4px; padding: 2px; cursor: pointer;'}),
+            'overlay_color': forms.TextInput(attrs={'type': 'color', 'style': 'width: 80px; height: 40px; border: 1px solid #ccc; border-radius: 4px; padding: 2px; cursor: pointer;'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name not in ['bg_color', 'overlay_color', 'bg_image', 'icon'] and not isinstance(field.widget, (forms.CheckboxInput,)):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = '__all__'
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, (forms.CheckboxInput,)) and field_name != 'image':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class ProductInquiryForm(forms.ModelForm):
+    class Meta:
+        model = ProductInquiry
+        fields = ['product', 'name', 'email', 'phone', 'message']
+        widgets = {
+            'product': forms.HiddenInput(),
+            'name': forms.TextInput(attrs={'placeholder': 'Your Full Name', 'required': True}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Your Email Address', 'required': True}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Your Phone Number', 'required': True, 'type': 'tel'}),
+            'message': forms.Textarea(attrs={'placeholder': 'Write any comments or specific requests here...', 'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name != 'product':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class ProductReviewForm(forms.ModelForm):
+    class Meta:
+        model = ProductReview
+        fields = ['reviewer_name', 'reviewer_email', 'rating', 'review_text']
+        widgets = {
+            'reviewer_name': forms.TextInput(attrs={'placeholder': 'Your Full Name', 'required': True}),
+            'reviewer_email': forms.EmailInput(attrs={'placeholder': 'Your Email Address', 'required': True}),
+            'rating': forms.Select(choices=[(i, f"{i} Stars") for i in range(5, 0, -1)]),
+            'review_text': forms.Textarea(attrs={'placeholder': 'Share your experience with this product...', 'rows': 4, 'required': True}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class SportsPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = SportsPageSettings
+        fields = '__all__'
+        widgets = {
+            'page_intro': forms.Textarea(attrs={'rows': 4}),
+            'facilities': forms.Textarea(attrs={'rows': 6, 'placeholder': 'Enter one facility per line...'}),
+            'achievements': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter one achievement per line...'}),
+            'policies': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter one policy per line...'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class SportsGalleryImageForm(forms.ModelForm):
+    class Meta:
+        model = SportsGalleryImage
+        fields = '__all__'
+        widgets = {
+            'caption': forms.TextInput(attrs={'placeholder': 'Image caption (optional)'}),
+            'sport_tag': forms.TextInput(attrs={'placeholder': 'e.g. Cricket, Volleyball, Athletics'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class NEPTabForm(forms.ModelForm):
+    class Meta:
+        model = NEPTab
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Enter tab title (e.g. ABC Portal)'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class NEPTabFileForm(forms.ModelForm):
+    class Meta:
+        model = NEPTabFile
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'File label (e.g. Curriculum PDF)'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class NEPTabLinkForm(forms.ModelForm):
+    class Meta:
+        model = NEPTabLink
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Link label (e.g. Digilocker web)'}),
+            'url': forms.URLInput(attrs={'placeholder': 'https://example.com'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class LibraryPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = LibraryPageSettings
+        fields = '__all__'
+        widgets = {
+            'page_intro': forms.Textarea(attrs={'rows': 4}),
+            'about_library_text': forms.Textarea(attrs={'rows': 5}),
+            'future_plan_text': forms.Textarea(attrs={'rows': 5}),
+            'sections_text': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Reference Section\nCirculation Section\nPeriodical Section'}),
+            'about_services_text': forms.Textarea(attrs={'rows': 3}),
+            'new_suggestion_text': forms.Textarea(attrs={'rows': 3}),
+            'library_image_url': forms.TextInput(attrs={'placeholder': '/static/assets/images/feature/0001.png'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class LibraryBookCategoryForm(forms.ModelForm):
+    class Meta:
+        model = LibraryBookCategory
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class LibraryResourceForm(forms.ModelForm):
+    class Meta:
+        model = LibraryResource
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class LibraryBookSuggestionForm(forms.ModelForm):
+    class Meta:
+        model = LibraryBookSuggestion
+        fields = ['book_title', 'author', 'recommended_by', 'email', 'reason']
+        widgets = {
+            'book_title': forms.TextInput(attrs={'placeholder': 'Enter book title', 'required': True}),
+            'author': forms.TextInput(attrs={'placeholder': 'Enter author name', 'required': True}),
+            'recommended_by': forms.TextInput(attrs={'placeholder': 'Your name (student/faculty)', 'required': True}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Your email address', 'required': True}),
+            'reason': forms.Textarea(attrs={'placeholder': 'Why are you suggesting this book? (optional)', 'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class LibraryGalleryImageForm(forms.ModelForm):
+    class Meta:
+        model = LibraryGalleryImage
+        fields = '__all__'
+        widgets = {
+            'caption': forms.TextInput(attrs={'placeholder': 'Image caption (optional)'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class MenuItemForm(forms.ModelForm):
+    class Meta:
+        model = MenuItem
+        fields = ['title', 'url', 'is_named_url', 'parent', 'order', 'is_active', 'open_in_new_tab']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add bootstrap class to form elements
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+            else:
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-check-input".strip()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        url = cleaned_data.get('url')
+        is_named_url = cleaned_data.get('is_named_url')
+        parent = cleaned_data.get('parent')
+        
+        # Prevent selecting itself as parent
+        if self.instance.pk and parent == self.instance:
+            raise forms.ValidationError("A menu item cannot be its own parent.")
+            
+        # Prevent cyclic dependency
+        if parent:
+            curr = parent
+            while curr is not None:
+                if self.instance.pk and curr.pk == self.instance.pk:
+                    raise forms.ValidationError("A menu item cannot have its own descendant as a parent.")
+                curr = curr.parent
+
+        # Validate Named URL if checked
+        if is_named_url and url:
+            from django.urls import reverse, NoReverseMatch
+            parts = url.split()
+            url_name = parts[0]
+            url_args = [arg.strip("'\"") for arg in parts[1:]]
+            
+            try:
+                reverse(url_name, args=url_args)
+            except NoReverseMatch:
+                raise forms.ValidationError(
+                    f"'{url}' is not a valid Django URL pattern or cannot be resolved with the provided arguments."
+                )
+        return cleaned_data

@@ -287,7 +287,44 @@
               mainClass: 'mfp-fade',
               removalDelay: 160,
               preloader: false,
-              fixedContentPos: false
+              fixedContentPos: false,
+              iframe: {
+                markup: '<div class="mfp-iframe-scaler">'+
+                          '<div class="mfp-close"></div>'+
+                          '<iframe class="mfp-iframe" frameborder="0" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>'+
+                        '</div>',
+                patterns: {
+                  youtube: {
+                    index: 'youtube.com/',
+                    id: 'v=',
+                    src: '//www.youtube-nocookie.com/embed/%id%?autoplay=1'
+                  },
+                  youtube_shorts: {
+                    index: 'youtube.com/shorts/',
+                    id: 'shorts/',
+                    src: '//www.youtube-nocookie.com/embed/%id%?autoplay=1'
+                  },
+                  youtube_embed: {
+                    index: 'youtube.com/embed/',
+                    id: 'embed/',
+                    src: '//www.youtube-nocookie.com/embed/%id%?autoplay=1'
+                  },
+                  youtu_be: {
+                    index: 'youtu.be/',
+                    id: '/',
+                    src: '//www.youtube-nocookie.com/embed/%id%?autoplay=1'
+                  },
+                  vimeo: {
+                    index: 'vimeo.com/',
+                    id: '/',
+                    src: '//player.vimeo.com/video/%id%?autoplay=1'
+                  },
+                  gmaps: {
+                    index: '//maps.google.',
+                    src: '%id%&output=embed'
+                  }
+                }
+              }
             });
           });
         },

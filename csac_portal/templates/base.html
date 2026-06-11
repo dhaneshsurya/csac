@@ -16,6 +16,23 @@
 <link href="{% static 'assets/css/plugins/jquery-ui.css' %}" rel="stylesheet"/>
 <link href="{% static 'assets/css/style04.css' %}" rel="stylesheet"/>
 <link href="{% static 'assets/css/academic_minimal.css' %}" rel="stylesheet"/>
+{% if site_settings %}
+  {% if site_settings.college_name_en_google_font_url %}
+    <link href="{{ site_settings.college_name_en_google_font_url }}" rel="stylesheet">
+  {% endif %}
+  {% if site_settings.college_name_hi_google_font_url %}
+    <link href="{{ site_settings.college_name_hi_google_font_url }}" rel="stylesheet">
+  {% endif %}
+  {% if site_settings.tagline_google_font_url %}
+    <link href="{{ site_settings.tagline_google_font_url }}" rel="stylesheet">
+  {% endif %}
+  {% if site_settings.address_line1_google_font_url %}
+    <link href="{{ site_settings.address_line1_google_font_url }}" rel="stylesheet">
+  {% endif %}
+  {% if site_settings.address_line2_google_font_url %}
+    <link href="{{ site_settings.address_line2_google_font_url }}" rel="stylesheet">
+  {% endif %}
+{% endif %}
 <style>
 .navbar-top{display:flex;justify-content:center;align-items:center;height:auto;padding:1px;background-color:#f8f9fa;font-family:"Roboto Slab",serif;letter-spacing:2px}
 .logo img{width:170px;height:110px;padding-right:50px;display:block}
@@ -26,7 +43,7 @@
 .logos-right{display:flex;gap:10px}
 .logos-right img{height:100px;width:auto}
 .mobile-only{display:none}
-.fixed-height-image{height:500px;object-fit:cover;width:100%}
+.fixed-height-image{height:auto !important;aspect-ratio:1024/523;object-fit:cover;width:100%}
 .caption{position:absolute;text-align:center;bottom:10px;left:10px;color:white;background-color:rgba(0,0,0,0.5);padding:5px}
 .banner__content__slide__item{position:relative}
 mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weight:500}
@@ -41,6 +58,32 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
 @media only screen and (max-width:768px){.navbar-top{flex-direction:column;align-items:flex-start;margin:15px 10px}.logo img{display:none}.title-large{font-size:18px}.title-medium{font-size:16px}.subheading{font-size:14px}}
 @media only screen and (min-width:1201px){.header__right{display:none}}
 @media (max-width:1200px){.mobile-only{display:block}}
+.developer-credit-link {
+    color: inherit !important;
+    text-decoration: none !important;
+    font-size: 10px;
+    font-weight: normal;
+    opacity: 0.55;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.developer-credit-link:hover {
+    color: #ff6b8a !important;
+    opacity: 1 !important;
+    transform: translateY(-1px);
+    text-decoration: none !important;
+}
+.developer-credit-link:hover .power-icon {
+    transform: rotate(180deg) scale(1.25);
+    color: #E61013 !important;
+    text-shadow: 0 0 8px rgba(230,16,19,0.5);
+}
+.developer-credit-link .power-icon {
+    font-size: 9px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 </style>
 {% block extra_css %}{% endblock %}
 </head>
@@ -53,11 +96,11 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
   </div>
   <div class="content">
     {% if site_settings %}
-    <p class="title-large">{{ site_settings.college_name_hi }}</p>
-    <p class="title-large">{{ site_settings.college_name_en|upper }}</p>
-    <p class="title-medium">{{ site_settings.address_line1 }}</p>
-    <p class="subheading">{{ site_settings.address_line2 }}</p>
-    <p class="subheading" style="color:#E61013;font-weight:bold;">{{ site_settings.tagline }}</p>
+    <p class="title-large" style="{% if site_settings.college_name_hi_font_family %}font-family: '{{ site_settings.college_name_hi_font_family|escapejs }}', sans-serif;{% endif %} {% if site_settings.college_name_hi_font_size %}font-size: {{ site_settings.college_name_hi_font_size }};{% endif %} {% if site_settings.college_name_hi_font_color %}color: {{ site_settings.college_name_hi_font_color }};{% endif %}">{{ site_settings.college_name_hi }}</p>
+    <p class="title-large" style="{% if site_settings.college_name_en_font_family %}font-family: '{{ site_settings.college_name_en_font_family|escapejs }}', sans-serif;{% endif %} {% if site_settings.college_name_en_font_size %}font-size: {{ site_settings.college_name_en_font_size }};{% endif %} {% if site_settings.college_name_en_font_color %}color: {{ site_settings.college_name_en_font_color }};{% endif %}">{{ site_settings.college_name_en|upper }}</p>
+    <p class="title-medium" style="{% if site_settings.address_line1_font_family %}font-family: '{{ site_settings.address_line1_font_family|escapejs }}', sans-serif;{% endif %} {% if site_settings.address_line1_font_size %}font-size: {{ site_settings.address_line1_font_size }};{% endif %} {% if site_settings.address_line1_font_color %}color: {{ site_settings.address_line1_font_color }};{% endif %}">{{ site_settings.address_line1 }}</p>
+    <p class="subheading" style="{% if site_settings.address_line2_font_family %}font-family: '{{ site_settings.address_line2_font_family|escapejs }}', sans-serif;{% endif %} {% if site_settings.address_line2_font_size %}font-size: {{ site_settings.address_line2_font_size }};{% endif %} {% if site_settings.address_line2_font_color %}color: {{ site_settings.address_line2_font_color }};{% endif %}">{{ site_settings.address_line2 }}</p>
+    <p class="subheading" style="font-weight:bold; {% if site_settings.tagline_font_family %}font-family: '{{ site_settings.tagline_font_family|escapejs }}', sans-serif;{% endif %} {% if site_settings.tagline_font_size %}font-size: {{ site_settings.tagline_font_size }};{% endif %} {% if site_settings.tagline_font_color %}color: {{ site_settings.tagline_font_color }};{% endif %}">{{ site_settings.tagline }}</p>
     {% else %}
     <p class="title-large">चैतन्य विज्ञान एवं कला महाविद्यालय, पामगढ़</p>
     <p class="title-large">CHAITANYA SCIENCE AND ARTS COLLEGE</p>
@@ -89,118 +132,27 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
             <div class="navigation">
               <nav class="navigation__menu">
                 <ul>
-                  <li class="navigation__menu--item">
-                    <a class="navigation__menu--item__link" href="{% url 'core:home' %}">Home</a>
-                  </li>
-                  <li class="navigation__menu--item has-child has-arrow">
-                    <a class="navigation__menu--item__link" href="{% url 'core:about' %}">About Us</a>
+                  {% for menu in navbar_menu %}
+                  <li class="navigation__menu--item {% if menu.children.all %}has-child has-arrow{% endif %}">
+                    <a class="navigation__menu--item__link" href="{{ menu.get_absolute_url }}" {% if menu.open_in_new_tab %}target="_blank"{% endif %}>{{ menu.title }}</a>
+                    {% if menu.children.all %}
                     <ul class="submenu sub__style">
-                      <li><a href="{% url 'core:about' %}">About Institute</a></li>
-                      <li><a href="{% url 'core:recognition' %}">Achievements &amp; Recognition</a></li>
-                      <li class="has-child has-arrow">
-                        <a href="#">Staff</a>
+                      {% for child in menu.children.all %}
+                      <li class="{% if child.children.all %}has-child has-arrow{% endif %}">
+                        <a href="{{ child.get_absolute_url }}" {% if child.open_in_new_tab %}target="_blank"{% endif %}>{{ child.title }}</a>
+                        {% if child.children.all %}
                         <ul class="sub__style">
-                          <li><a href="{% url 'core:staff_teaching' %}">Teaching</a></li>
-                          <li><a href="{% url 'core:staff_nonteaching' %}">Non-Teaching</a></li>
+                          {% for subchild in child.children.all %}
+                          <li><a href="{{ subchild.get_absolute_url }}" {% if subchild.open_in_new_tab %}target="_blank"{% endif %}>{{ subchild.title }}</a></li>
+                          {% endfor %}
                         </ul>
+                        {% endif %}
                       </li>
-                      <li><a href="{% url 'core:committees' %}">Committees</a></li>
-                      <li><a href="{% url 'core:policies' %}">Policies</a></li>
+                      {% endfor %}
                     </ul>
+                    {% endif %}
                   </li>
-                  <li class="navigation__menu--item has-child has-arrow">
-                    <a class="navigation__menu--item__link" href="{% url 'academics:programs' %}">Academics</a>
-                    <ul class="submenu sub__style">
-                      <li class="has-child has-arrow">
-                        <a href="#">Arts</a>
-                        <ul class="sub__style">
-                          <li><a href="{% url 'academics:department_detail' 'hindi' %}">Hindi</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'english' %}">English</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'sociology' %}">Sociology</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'geography' %}">Geography</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'social-work' %}">Social Work</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'political-science' %}">Political Science</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'history' %}">History</a></li>
-                        </ul>
-                      </li>
-                      <li class="has-child has-arrow">
-                        <a href="#">Science</a>
-                        <ul class="sub__style">
-                          <li><a href="{% url 'academics:department_detail' 'zoology' %}">Zoology</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'physics' %}">Physics</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'chemistry' %}">Chemistry</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'mathematics' %}">Mathematics</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'botany' %}">Botany</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'forestry' %}">Forestry</a></li>
-                          <li><a href="{% url 'academics:department_detail' 'computer-science' %}">Computer Science</a></li>
-                        </ul>
-                      </li>
-                      <li><a href="{% url 'academics:programs' %}">Programs Offered</a></li>
-                      <li><a href="{% url 'core:co_po' %}">CO PO</a></li>
-                      <li><a href="{% url 'academics:academic_calendar' %}">Academic Calendar</a></li>
-                    </ul>
-                  </li>
-                  <li class="navigation__menu--item has-child has-arrow">
-                    <a class="navigation__menu--item__link" href="{% url 'students:admission' %}">Student Corner</a>
-                    <ul class="submenu sub__style">
-                      <li><a href="{% url 'students:admission' %}">Admission Procedure</a></li>
-                      <li><a href="https://www.snpvraigarh.in/" target="_blank">University Admission</a></li>
-                      <li><a href="{% url 'students:online_admission' %}">Online Admission</a></li>
-                      <li><a href="{% url 'students:fee_structure' %}">Fee Structure</a></li>
-                      <li><a href="https://www.snpvraigarh.in/" target="_blank">Result</a></li>
-                      <li><a href="{% url 'students:scholarship' %}">Scholarship</a></li>
-                      <li><a href="{% url 'students:library' %}">Library</a></li>
-                      <li><a href="{% url 'students:alumni' %}">Alumni</a></li>
-                      <li><a href="{% url 'students:merit_list' %}">Merit List</a></li>
-                    </ul>
-                  </li>
-                  <li class="navigation__menu--item has-child has-arrow">
-                    <a class="navigation__menu--item__link" href="{% url 'naac:naac_home' %}">NAAC</a>
-                    <ul class="submenu sub__style">
-                      <li><a href="{% url 'naac:naac_home' %}">NAAC</a></li>
-                      <li class="has-child has-arrow">
-                        <a href="{% url 'naac:iqac' %}">IQAC</a>
-                        <ul class="sub__style">
-                          <li><a href="{% url 'naac:iiqa' %}">IIQA</a></li>
-                          <li><a href="{% url 'naac:ssr' %}">SSR</a></li>
-                          <li><a href="{% url 'naac:dvv' %}">DVV</a></li>
-                          <li><a href="{% url 'naac:atr' %}">ATR</a></li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                  <li class="navigation__menu--item has-child has-arrow">
-                    <a class="navigation__menu--item__link" href="#">Feedback</a>
-                    <ul class="submenu sub__style">
-                      <li><a href="{% url 'feedback:student_feedback' %}">Student's Feedback</a></li>
-                      <li><a href="{% url 'feedback:parent_feedback' %}">Parent's Feedback</a></li>
-                      <li><a href="{% url 'feedback:faculty_feedback' %}">Faculty's Feedback</a></li>
-                      <li><a href="{% url 'feedback:alumni_feedback' %}">Alumni's Feedback</a></li>
-                    </ul>
-                  </li>
-                  <li class="navigation__menu--item has-child has-arrow">
-                    <a class="navigation__menu--item__link" href="#">Grievances</a>
-                    <ul class="submenu sub__style">
-                      <li><a href="{% url 'grievances:anti_ragging' %}">Anti Ragging Committee</a></li>
-                      <li><a href="{% url 'grievances:icc' %}">Internal Complaints Committee (ICC)</a></li>
-                      <li><a href="{% url 'grievances:redressal' %}">Grievance Redressal Committee</a></li>
-                      <li><a href="{% url 'grievances:submit_grievance' %}">Submit a Grievance</a></li>
-                    </ul>
-                  </li>
-                  <li class="navigation__menu--item">
-                    <a class="navigation__menu--item__link" href="{% url 'core:ugc' %}">UGC</a>
-                  </li>
-                  <li class="navigation__menu--item has-child has-arrow">
-                    <a class="navigation__menu--item__link" href="#">Gallery</a>
-                    <ul class="submenu sub__style">
-                      <li><a href="{% url 'gallery:image_gallery' %}">Image Gallery</a></li>
-                      <li><a href="{% url 'gallery:video_gallery' %}">Video Gallery</a></li>
-                      <li><a href="{% url 'gallery:news_gallery' %}">News Gallery</a></li>
-                    </ul>
-                  </li>
-                  <li class="navigation__menu--item">
-                    <a class="navigation__menu--item__link" href="https://chaitanyapamgarh.onlineexamforms.com/student.aspx" target="_blank">Student Login</a>
-                  </li>
+                  {% endfor %}
                 </ul>
               </nav>
             </div>
@@ -262,7 +214,7 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
 {% block content %}{% endblock %}
 
 <!-- Footer -->
-<footer class="footer v__1" style="background-color:#f8f9fa">
+<footer class="footer v__1" style="background-color:#f8f9fa; padding: 40px 0 !important;">
   <div class="container">
     <div class="row g-5">
       <div class="col-lg-4 col-md-6 col-sm-6">
@@ -316,6 +268,7 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
               <li><a href="{% url 'core:nep' %}">NEP 2020</a></li>
               <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
               {% endfor %}
+              <li><a href="{% url 'core:sitemap' %}">Sitemap</a></li>
             </ul>
           </div>
         </div>
@@ -340,10 +293,18 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
   </div>
 </footer>
 <div class="rts-footer-copy-right v_1">
-  <div class="container">
+  <div class="container-fluid px-md-5 px-3">
     <div class="row">
-      <div class="rt-center">
-        <p class="--p-xs">Copyright &copy; 2024 All Rights Reserved by <a href="{% url 'core:home' %}">Chaitanya Science and Arts College, Pamgarh</a></p>
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 text-center text-md-start">
+          <p class="--p-xs mb-0">Copyright &copy; {% now "Y" %} All Rights Reserved by <a href="{% url 'core:home' %}">Chaitanya Science and Arts College, Pamgarh</a></p>
+          <p class="--p-xs mb-0">
+            <a href="https://dnstech.in" target="_blank" class="developer-credit-link">
+              <i class="fas fa-power-off power-icon"></i>
+              Developed &amp; Maintained by DNSTECH
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -355,46 +316,27 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
   <div class="mobile-menu-main">
     <nav class="nav-main mainmenu-nav mt--30">
       <ul class="mainmenu metismenu" id="mobile-menu-active">
-        <li><a class="main" href="{% url 'core:home' %}">Home</a></li>
-        <li class="has-droupdown">
-          <a class="main">About Us</a>
+        {% for menu in navbar_menu %}
+        <li class="{% if menu.children.all %}has-droupdown{% endif %}">
+          <a class="main" {% if not menu.children.all %}href="{{ menu.get_absolute_url }}"{% endif %} {% if menu.open_in_new_tab %}target="_blank"{% endif %}>{{ menu.title }}</a>
+          {% if menu.children.all %}
           <ul class="submenu mm-collapse">
-            <li><a class="mobile-menu-link" href="{% url 'core:about' %}">About Chaitanya College</a></li>
-            <li><a href="{% url 'core:staff_teaching' %}">Teaching Staff</a></li>
-            <li><a href="{% url 'core:committees' %}">Committees</a></li>
-            <li><a href="{% url 'core:policies' %}">Policies</a></li>
+            {% for child in menu.children.all %}
+            <li class="{% if child.children.all %}has-droupdown{% endif %}">
+              <a class="mobile-menu-link" href="{{ child.get_absolute_url }}" {% if child.open_in_new_tab %}target="_blank"{% endif %}>{{ child.title }}</a>
+              {% if child.children.all %}
+              <ul class="submenu mm-collapse">
+                {% for subchild in child.children.all %}
+                <li><a class="mobile-menu-link" href="{{ subchild.get_absolute_url }}" {% if subchild.open_in_new_tab %}target="_blank"{% endif %}>{{ subchild.title }}</a></li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </li>
+            {% endfor %}
           </ul>
+          {% endif %}
         </li>
-        <li class="has-droupdown">
-          <a class="main">Academics</a>
-          <ul class="submenu mm-collapse">
-            <li><a href="{% url 'academics:programs' %}">Programs Offered</a></li>
-            <li><a href="{% url 'academics:academic_calendar' %}">Academic Calendar</a></li>
-          </ul>
-        </li>
-        <li class="has-droupdown">
-          <a class="main">Student Corner</a>
-          <ul class="submenu mm-collapse">
-            <li><a href="{% url 'students:admission' %}">Admission</a></li>
-            <li><a href="{% url 'students:online_admission' %}">Online Admission</a></li>
-            <li><a href="{% url 'students:fee_structure' %}">Fee Structure</a></li>
-            <li><a href="{% url 'students:scholarship' %}">Scholarship</a></li>
-            <li><a href="{% url 'students:library' %}">Library</a></li>
-          </ul>
-        </li>
-        <li><a class="main" href="{% url 'naac:naac_home' %}">NAAC</a></li>
-        <li class="has-droupdown">
-          <a class="main">Feedback</a>
-          <ul class="submenu mm-collapse">
-            <li><a href="{% url 'feedback:student_feedback' %}">Student Feedback</a></li>
-            <li><a href="{% url 'feedback:parent_feedback' %}">Parent Feedback</a></li>
-            <li><a href="{% url 'feedback:faculty_feedback' %}">Faculty Feedback</a></li>
-            <li><a href="{% url 'feedback:alumni_feedback' %}">Alumni Feedback</a></li>
-          </ul>
-        </li>
-        <li><a class="main" href="{% url 'grievances:submit_grievance' %}">Submit Grievance</a></li>
-        <li><a class="main" href="{% url 'gallery:image_gallery' %}">Gallery</a></li>
-        <li><a class="main" href="{% url 'core:contact' %}">Contact</a></li>
+        {% endfor %}
       </ul>
     </nav>
   </div>

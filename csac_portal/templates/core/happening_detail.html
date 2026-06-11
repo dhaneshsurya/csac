@@ -39,7 +39,7 @@
           {% endif %}
           
           <div class="event-about-section">
-            <h3 style="font-size: 26px; border-bottom: 2px solid #E61013; display: inline-block; padding-bottom: 8px; margin-bottom: 20px; color: #333;">About The Event</h3>
+            <h3 style="font-size: 26px; border-bottom: 2px solid #B71A34; display: inline-block; padding-bottom: 8px; margin-bottom: 20px; color: #333;">About The Event</h3>
             <div class="event-description-text" style="line-height: 1.7; color: #444; font-size: 16px; text-align: justify;">
               {% if happening.description %}
                 {{ happening.description|safe }}
@@ -53,13 +53,13 @@
       
       <!-- Sidebar -->
       <div class="col-lg-4 col-md-12">
-        <div class="event-sidebar" style="position: sticky; top: 100px;">
+        <div class="event-sidebar" style="position: sticky; top: 100px; width: max-content; min-width: 100%;">
           <!-- Event Info Box -->
           <div class="info-box mb-4" style="background: white; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); padding: 25px;">
             <h4 style="font-size: 20px; margin-bottom: 20px; color: #333; font-weight: 700; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px;">Event Information</h4>
             
             <div class="info-item d-flex align-items-center mb-3" style="font-size: 15px;">
-              <span style="color: #E61013; font-size: 18px; margin-right: 12px; width: 24px; text-align: center;"><i class="fa-regular fa-calendar-days"></i></span>
+              <span style="color: #B71A34; font-size: 18px; margin-right: 12px; width: 24px; text-align: center;"><i class="fa-regular fa-calendar-days"></i></span>
               <div>
                 <strong style="display: block; color: #555; font-size: 13px; text-transform: uppercase;">Date</strong>
                 <span style="color: #333; font-weight: 500;">{% if happening.date %}{{ happening.date|date:"F d, Y" }}{% else %}To Be Announced{% endif %}</span>
@@ -68,7 +68,7 @@
 
             {% if happening.category %}
             <div class="info-item d-flex align-items-center mb-3" style="font-size: 15px;">
-              <span style="color: #E61013; font-size: 18px; margin-right: 12px; width: 24px; text-align: center;"><i class="fa-regular fa-tags"></i></span>
+              <span style="color: #B71A34; font-size: 18px; margin-right: 12px; width: 24px; text-align: center;"><i class="fa-regular fa-tags"></i></span>
               <div>
                 <strong style="display: block; color: #555; font-size: 13px; text-transform: uppercase;">Category</strong>
                 <span style="color: #333; font-weight: 500;">{{ happening.category }}</span>
@@ -78,7 +78,7 @@
 
             {% if happening.participants_count %}
             <div class="info-item d-flex align-items-center mb-3" style="font-size: 15px;">
-              <span style="color: #E61013; font-size: 18px; margin-right: 12px; width: 24px; text-align: center;"><i class="fa-regular fa-users"></i></span>
+              <span style="color: #B71A34; font-size: 18px; margin-right: 12px; width: 24px; text-align: center;"><i class="fa-regular fa-users"></i></span>
               <div>
                 <strong style="display: block; color: #555; font-size: 13px; text-transform: uppercase;">Total Participants</strong>
                 <span style="color: #333; font-weight: 500;">{{ happening.participants_count }}</span>
@@ -90,16 +90,14 @@
           <!-- Actions / Downloads -->
           {% if happening.brochure or happening.registration_link %}
           <div class="actions-box" style="background: white; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); padding: 25px;">
-            <h4 style="font-size: 20px; margin-bottom: 20px; color: #333; font-weight: 700; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px;">Registration &amp; Documents</h4>
+            <h4 style="font-size: 20px; margin-bottom: 20px; color: #333; font-weight: 700; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; white-space: nowrap;">Registration &amp; Documents</h4>
             
             {% if happening.registration_link %}
-            <a href="{{ happening.registration_link }}" target="_blank" class="btn btn-primary w-100 mb-3" style="background-color: #E61013; border-color: #E61013; font-weight: 600; padding: 12px; font-size: 15px; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; color: white;">
+            <a href="{{ happening.registration_link }}" target="_blank" class="btn btn-primary w-100" style="background-color: #B71A34; border-color: #B71A34; font-weight: 600; padding: 12px; font-size: 15px; border-radius: 6px; display: flex !important; width: 100% !important; min-width: max-content !important; align-items: center; justify-content: center; gap: 8px; color: white; white-space: nowrap;">
               <i class="fa-solid fa-pen-to-square"></i> Register For Event
             </a>
-            {% endif %}
-
-            {% if happening.brochure %}
-            <a href="{{ happening.brochure.url }}" target="_blank" class="btn btn-outline-secondary w-100" style="font-weight: 600; padding: 12px; font-size: 15px; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; border-color: #ccc; color: #555;">
+            {% elif happening.brochure %}
+            <a href="{{ happening.brochure.url }}" target="_blank" class="btn btn-outline-secondary w-100" style="font-weight: 600; padding: 12px; font-size: 15px; border-radius: 6px; display: flex !important; width: 100% !important; min-width: max-content !important; align-items: center; justify-content: center; gap: 8px; border-color: #ccc; color: #555; white-space: nowrap;">
               <i class="fa-solid fa-file-pdf"></i> Download Brochure
             </a>
             {% endif %}
@@ -114,7 +112,7 @@
     <div class="row mt-5">
       <div class="col-12">
         <div class="gallery-section" style="background: white; border: 1px solid #eee; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); padding: 30px;">
-          <h3 style="font-size: 26px; border-bottom: 2px solid #E61013; display: inline-block; padding-bottom: 8px; margin-bottom: 30px; color: #333;">Event Image Gallery</h3>
+          <h3 style="font-size: 26px; border-bottom: 2px solid #B71A34; display: inline-block; padding-bottom: 8px; margin-bottom: 30px; color: #333;">Event Image Gallery</h3>
           <div class="row g-4" style="display: flex; flex-wrap: wrap;">
             {% for g_image in gallery_images %}
             <div class="col-lg-3 col-md-4 col-sm-6" style="display: flex;">

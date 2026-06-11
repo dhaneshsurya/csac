@@ -23,4 +23,15 @@ urlpatterns = [
     path('happenings/', views.happenings, name='happenings'),
     path('happenings/<int:pk>/', views.happening_detail, name='happening_detail'),
     path('events/<int:pk>/', views.event_detail, name='event_detail'),
+    path('infrastructure/', views.infrastructure, name='infrastructure'),
+    path('products/', views.products, name='products'),
+    path('products/<slug:slug>/', views.product_detail, name='product_detail'),
+    path('students/library/', views.library, name='library'),
+    path('sitemap/', views.sitemap, name='sitemap'),
+    # Navbar management URLs
+    path('manage-navbar/', views.manage_navbar, name='manage_navbar'),
+    path('manage-navbar/add/', views.add_menu_item, name='add_menu_item'),
+    path('manage-navbar/edit/<int:pk>/', views.edit_menu_item, name='edit_menu_item'),
+    path('manage-navbar/delete/<int:pk>/', views.delete_menu_item, name='delete_menu_item'),
+    path('manage-navbar/move/<int:pk>/<str:direction>/', views.move_menu_item, name='move_menu_item'),
 ]

@@ -8,7 +8,12 @@ from .models import (
     AboutPage, Recognition, CommitteeActivity, CommitteeGalleryImage,
     UGCTable, UGCDocument, UGCPageSettings, UGCGrant, PopupAnnouncement,
     BreadcrumbSettings, PageBreadcrumb, NSSPageSettings, NSSActivity, NSSGalleryImage,
-    IICPageSettings, IICGalleryImage
+    IICPageSettings, IICGalleryImage, CampusMedia, Infrastructure, InfrastructureImage,
+    Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
+    SportsPageSettings, SportsGalleryImage,
+    NEPTab, NEPTabFile, NEPTabLink,
+    LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
+    MenuItem
 )
 from .forms import (
     SiteSettingsForm, CommitteeForm, CommitteeMemberForm,
@@ -16,7 +21,13 @@ from .forms import (
     PolicyForm, NoticeForm, EventForm, UGCTableForm, UGCDocumentForm,
     UGCPageSettingsForm, UGCGrantForm, BreadcrumbSettingsForm, PageBreadcrumbForm,
     NSSPageSettingsForm, NSSActivityForm, NSSGalleryImageForm,
-    IICPageSettingsForm, IICGalleryImageForm
+    IICPageSettingsForm, IICGalleryImageForm, CampusMediaForm, TestimonialForm,
+    InfrastructureForm, InfrastructureImageForm, AccreditationLogoForm, QuickLinkCardForm,
+    ProductForm, ProductInquiryForm, ProductReviewForm,
+    SportsPageSettingsForm, SportsGalleryImageForm,
+    NEPTabForm, NEPTabFileForm, NEPTabLinkForm,
+    LibraryPageSettingsForm, LibraryBookCategoryForm, LibraryResourceForm, LibraryBookSuggestionForm,
+    LibraryGalleryImageForm, MenuItemForm
 )
 
 
@@ -26,9 +37,39 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     form = SiteSettingsForm
     list_display = ('college_name_en', 'phone', 'email')
     fieldsets = (
-        ('College Name', {'fields': ('college_name_en', 'college_name_hi', 'tagline')}),
+        ('College Name (English) Settings', {
+            'fields': (
+                'college_name_en',
+                ('college_name_en_font_family', 'college_name_en_google_font_url'),
+                ('college_name_en_font_size', 'college_name_en_font_color')
+            )
+        }),
+        ('College Name (Hindi) Settings', {
+            'fields': (
+                'college_name_hi',
+                ('college_name_hi_font_family', 'college_name_hi_google_font_url'),
+                ('college_name_hi_font_size', 'college_name_hi_font_color')
+            )
+        }),
+        ('Tagline Settings', {
+            'fields': (
+                'tagline',
+                ('tagline_font_family', 'tagline_google_font_url'),
+                ('tagline_font_size', 'tagline_font_color')
+            )
+        }),
         ('Branding & Logos', {'fields': ('college_logo', 'college_logo_mobile', 'logo2', 'logo3', 'logo4', 'logo5')}),
-        ('Contact', {'fields': ('address_line1', 'address_line2', 'phone', 'email')}),
+        ('Contact Settings', {
+            'fields': (
+                'address_line1',
+                ('address_line1_font_family', 'address_line1_google_font_url'),
+                ('address_line1_font_size', 'address_line1_font_color'),
+                'address_line2',
+                ('address_line2_font_family', 'address_line2_google_font_url'),
+                ('address_line2_font_size', 'address_line2_font_color'),
+                ('phone', 'email')
+            )
+        }),
         ('Social Media', {'fields': ('facebook_url', 'youtube_url', 'instagram_url')}),
         ('Map', {'fields': ('google_maps_embed',)}),
         ('Other', {'fields': ('established_year',)}),
@@ -52,8 +93,17 @@ class BannerSlideAdmin(admin.ModelAdmin):
 
 @admin.register(AccreditationLogo)
 class AccreditationLogoAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order')
+    form = AccreditationLogoForm
+    list_display = ('image_preview', 'name', 'order', 'link')
     list_editable = ('order',)
+    search_fields = ('name',)
+
+    def image_preview(self, obj):
+        url = obj.get_image()
+        if url:
+            return format_html('<img src="{}" style="height:50px;border-radius:4px;object-fit:cover;" />', url)
+        return '—'
+    image_preview.short_description = 'Preview'
 
 
 @admin.register(StatCounter)
@@ -156,21 +206,42 @@ class SocialSchemeAdmin(admin.ModelAdmin):
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = ('student_name', 'program', 'rating', 'order')
+    form = TestimonialForm
+    list_display = ('photo_preview', 'student_name', 'program', 'rating', 'order')
     list_editable = ('rating', 'order')
     search_fields = ('student_name', 'program', 'text')
+
+    def photo_preview(self, obj):
+        url = obj.get_photo()
+        if url:
+            return format_html('<img src="{}" style="height:50px;width:50px;border-radius:50%;object-fit:cover;" />', url)
+        return "-"
+    photo_preview.short_description = 'Photo'
+
+    fieldsets = (
+        ('Student Information', {
+            'fields': ('student_name', 'program', 'rating', 'order')
+        }),
+        ('Testimonial Content', {
+            'fields': ('text',)
+        }),
+        ('Media/Photo', {
+            'fields': ('photo', 'photo_url')
+        }),
+    )
+
 
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     form = EventForm
-    list_display = ('title', 'date', 'time', 'location', 'is_active')
-    list_editable = ('is_active',)
+    list_display = ('title', 'date', 'time', 'location', 'is_active', 'is_sports_event')
+    list_editable = ('is_active', 'is_sports_event')
     search_fields = ('title', 'location')
-    list_filter = ('date', 'is_active')
+    list_filter = ('date', 'is_active', 'is_sports_event')
     fieldsets = (
         ('General Information', {
-            'fields': ('title', 'date', 'time', 'location', 'is_active')
+            'fields': ('title', 'date', 'time', 'location', 'is_active', 'is_sports_event')
         }),
         ('Event Details', {
             'fields': ('description',)
@@ -192,15 +263,16 @@ class HappeningImageInline(admin.TabularInline):
 
 @admin.register(Happening)
 class HappeningAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'department', 'date', 'order')
-    list_editable = ('order',)
+    list_display = ('title', 'category', 'department', 'date', 'order', 'is_sports_activity')
+    list_editable = ('order', 'is_sports_activity')
     search_fields = ('title', 'category')
-    list_filter = ('date', 'category', 'department')
+    list_filter = ('date', 'category', 'department', 'is_sports_activity')
     inlines = [HappeningImageInline]
 
 
 @admin.register(QuickLinkCard)
 class QuickLinkCardAdmin(admin.ModelAdmin):
+    form = QuickLinkCardForm
     list_display = ('title', 'link', 'order', 'is_active')
     list_editable = ('order', 'is_active')
     search_fields = ('title', 'link')
@@ -478,6 +550,226 @@ class IICGalleryImageAdmin(admin.ModelAdmin):
     image_preview.short_description = 'Preview'
 
 
+@admin.register(CampusMedia)
+class CampusMediaAdmin(admin.ModelAdmin):
+    form = CampusMediaForm
+    list_display = ('title', 'media_type', 'order', 'is_active', 'image_preview')
+    list_editable = ('order', 'is_active')
+    list_filter = ('media_type', 'is_active')
+    search_fields = ('title', 'video_url')
+
+    def image_preview(self, obj):
+        url = obj.get_image()
+        if url:
+            return format_html('<img src="{}" style="height:50px;border-radius:4px;object-fit:cover;" />', url)
+        return '—'
+    image_preview.short_description = 'Preview'
+
+class InfrastructureImageInline(admin.TabularInline):
+    model = InfrastructureImage
+    form = InfrastructureImageForm
+    extra = 1
+    fields = ('image', 'image_url', 'caption', 'order')
 
 
+@admin.register(Infrastructure)
+class InfrastructureAdmin(admin.ModelAdmin):
+    form = InfrastructureForm
+    list_display = ('title', 'slug', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    search_fields = ('title', 'description')
+    prepopulated_fields = {'slug': ('title',)}
+    inlines = [InfrastructureImageInline]
 
+
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'order')
+    list_editable = ('order',)
+    prepopulated_fields = {'slug': ('name',)}
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 2
+    fields = ('image', 'image_url', 'caption', 'order')
+
+
+class ProductReviewInline(admin.TabularInline):
+    model = ProductReview
+    form = ProductReviewForm
+    extra = 1
+    fields = ('reviewer_name', 'reviewer_email', 'rating', 'review_text', 'is_approved')
+
+
+class ProductInquiryInline(admin.TabularInline):
+    model = ProductInquiry
+    readonly_fields = ('name', 'email', 'phone', 'message', 'created_at')
+    extra = 0
+    can_delete = True
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    form = ProductForm
+    list_display = ('image_preview', 'name', 'category', 'price', 'in_stock', 'is_active', 'order')
+    list_editable = ('category', 'price', 'in_stock', 'is_active', 'order')
+    search_fields = ('name', 'description')
+    list_filter = ('category', 'in_stock', 'is_active')
+    prepopulated_fields = {'slug': ('name',)}
+    inlines = [ProductImageInline, ProductReviewInline, ProductInquiryInline]
+
+    def image_preview(self, obj):
+        url = obj.get_image()
+        if url:
+            return format_html('<img src="{}" style="height:50px;border-radius:4px;object-fit:cover;" />', url)
+        return '—'
+    image_preview.short_description = 'Preview'
+
+
+@admin.register(ProductInquiry)
+class ProductInquiryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'product', 'created_at')
+    list_filter = ('product', 'created_at')
+    search_fields = ('name', 'email', 'phone', 'message')
+    readonly_fields = ('product', 'name', 'email', 'phone', 'message', 'created_at')
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(ProductReview)
+class ProductReviewAdmin(admin.ModelAdmin):
+    list_display = ('reviewer_name', 'reviewer_email', 'product', 'rating', 'is_approved', 'created_at')
+    list_editable = ('is_approved',)
+    list_filter = ('product', 'rating', 'is_approved', 'created_at')
+    search_fields = ('reviewer_name', 'reviewer_email', 'review_text')
+
+
+@admin.register(SportsPageSettings)
+class SportsPageSettingsAdmin(admin.ModelAdmin):
+    form = SportsPageSettingsForm
+    list_display = ('page_intro_title', 'show_notices', 'show_events', 'show_gallery', 'show_happenings')
+    fieldsets = (
+        ('Page Introduction', {
+            'fields': ('page_intro_title', 'page_intro')
+        }),
+        ('Facilities & Achievements', {
+            'fields': ('facilities', 'achievements', 'policies'),
+            'description': 'Enter each item on a new line. They will be rendered as bullet lists on the sports page.'
+        }),
+        ('Section Visibility Controls', {
+            'fields': ('show_notices', 'show_events', 'show_gallery', 'show_happenings'),
+        }),
+    )
+
+    def has_add_permission(self, request):
+        if self.model.objects.exists():
+            return False
+        return True
+
+
+@admin.register(SportsGalleryImage)
+class SportsGalleryImageAdmin(admin.ModelAdmin):
+    form = SportsGalleryImageForm
+    list_display = ('image_preview', 'caption', 'sport_tag', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    search_fields = ('caption', 'sport_tag')
+    list_filter = ('sport_tag', 'is_active')
+
+    def image_preview(self, obj):
+        url = obj.get_image()
+        if url:
+            return format_html('<img src="{}" style="height:50px;border-radius:4px;object-fit:cover;" />', url)
+        return '—'
+    image_preview.short_description = 'Preview'
+
+
+class NEPTabFileInline(admin.TabularInline):
+    model = NEPTabFile
+    form = NEPTabFileForm
+    extra = 1
+
+
+class NEPTabLinkInline(admin.TabularInline):
+    model = NEPTabLink
+    form = NEPTabLinkForm
+    extra = 1
+
+
+@admin.register(NEPTab)
+class NEPTabAdmin(admin.ModelAdmin):
+    form = NEPTabForm
+    list_display = ('title', 'order', 'is_active', 'updated_at')
+    list_editable = ('order', 'is_active')
+    search_fields = ('title', 'description')
+    list_filter = ('is_active',)
+    inlines = [NEPTabFileInline, NEPTabLinkInline]
+
+
+class LibraryGalleryImageInline(admin.TabularInline):
+    model = LibraryGalleryImage
+    form = LibraryGalleryImageForm
+    extra = 2
+
+
+@admin.register(LibraryPageSettings)
+class LibraryPageSettingsAdmin(admin.ModelAdmin):
+    form = LibraryPageSettingsForm
+    list_display = ('page_intro_title', 'about_library_title', 'future_plan_title')
+    inlines = [LibraryGalleryImageInline]
+    fieldsets = (
+        ('Page Banner & Introduction', {
+            'fields': ('page_intro_title', 'page_intro', 'library_image', 'library_image_url')
+        }),
+        ('About Library & Future Plan', {
+            'fields': ('about_library_title', 'about_library_text', 'future_plan_title', 'future_plan_text')
+        }),
+        ('Library Services & Suggestions', {
+            'fields': ('sections_text', 'about_services_text', 'new_suggestion_text')
+        }),
+    )
+
+    def has_add_permission(self, request):
+        if self.model.objects.exists():
+            return False
+        return True
+
+
+@admin.register(LibraryBookCategory)
+class LibraryBookCategoryAdmin(admin.ModelAdmin):
+    form = LibraryBookCategoryForm
+    list_display = ('category_name', 'num_books', 'order')
+    list_editable = ('num_books', 'order')
+    search_fields = ('category_name',)
+
+
+@admin.register(LibraryResource)
+class LibraryResourceAdmin(admin.ModelAdmin):
+    form = LibraryResourceForm
+    list_display = ('name', 'website_url', 'order')
+    list_editable = ('website_url', 'order')
+    search_fields = ('name',)
+
+
+@admin.register(LibraryBookSuggestion)
+class LibraryBookSuggestionAdmin(admin.ModelAdmin):
+    list_display = ('book_title', 'author', 'recommended_by', 'email', 'created_at')
+    readonly_fields = ('book_title', 'author', 'recommended_by', 'email', 'reason', 'created_at')
+    search_fields = ('book_title', 'author', 'recommended_by', 'email', 'reason')
+    list_filter = ('created_at',)
+
+    def has_add_permission(self, request):
+        return False
+
+
+@admin.register(MenuItem)
+class MenuItemAdmin(admin.ModelAdmin):
+    form = MenuItemForm
+    list_display = ('title', 'url', 'parent', 'order', 'is_active', 'open_in_new_tab')
+    list_filter = ('is_active', 'open_in_new_tab', 'parent')
+    list_editable = ('order', 'is_active', 'open_in_new_tab')
+    search_fields = ('title', 'url')

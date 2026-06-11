@@ -8,9 +8,10 @@ from .models import (
     QuickLinkCard, AboutPage, Recognition, UGCTable, UGCDocument,
     UGCPageSettings, UGCGrant, PopupAnnouncement,
     NSSPageSettings, NSSActivity, NSSGalleryImage,
-    IICPageSettings, IICGalleryImage
+    IICPageSettings, IICGalleryImage, CampusMedia, Infrastructure, Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
+    MenuItem
 )
-from .forms import CareerGuidanceForm
+from .forms import CareerGuidanceForm, ProductInquiryForm, ProductReviewForm, MenuItemForm
 
 
 def home(request):
@@ -25,6 +26,7 @@ def home(request):
     events = Event.objects.filter(is_active=True)
     happenings = Happening.objects.order_by('-date', '-id')[:7]
     quick_link_cards = QuickLinkCard.objects.filter(is_active=True)
+    campus_media = CampusMedia.objects.filter(is_active=True).order_by('order', 'id')
 
     # Query categorized notices
     latest_notices = Notice.objects.filter(is_active=True).order_by('-published_date')[:10]
@@ -72,6 +74,7 @@ def home(request):
         'form': form,
         'page_title': 'Home',
         'active_popups': active_popups,
+        'campus_media': campus_media,
     }
     return render(request, 'core/home.html', context)
 
@@ -366,17 +369,55 @@ def ugc(request):
 
 
 def nep(request):
+    from .models import NEPTab
+    nep_tabs = NEPTab.objects.filter(is_active=True).prefetch_related('files', 'links').order_by('order', 'title')
     context = {
         'page_title': 'NEP 2020',
         'breadcrumb': 'National Education Policy 2020',
+        'nep_tabs': nep_tabs,
     }
     return render(request, 'core/nep.html', context)
 
 
+
+
 def sports(request):
+    from .models import SportsPageSettings, SportsGalleryImage
+    from django.utils import timezone
+
+    # Get or create singleton settings
+    settings_obj, _ = SportsPageSettings.objects.get_or_create(pk=1)
+
+    # Sports-tagged notices
+    sports_notices = Notice.objects.filter(
+        category='sports', is_active=True
+    ).order_by('-published_date')[:10]
+
+    # Sports-tagged upcoming events (sorted by date, show upcoming + recent)
+    sports_events = Event.objects.filter(
+        is_sports_event=True, is_active=True
+    ).order_by('date')[:8]
+
+    # Sports gallery
+    gallery_images = SportsGalleryImage.objects.filter(is_active=True)
+
+    # Sports happenings (past activities)
+    sports_happenings = Happening.objects.filter(
+        is_sports_activity=True
+    ).order_by('-date')[:6]
+
     context = {
         'page_title': 'Sports',
         'breadcrumb': 'Sports & Athletics',
+        'settings': settings_obj,
+        'facilities': settings_obj.get_facilities_list(),
+        'achievements': settings_obj.get_achievements_list(),
+        'policies': settings_obj.get_policies_list(),
+        'sports_notices': sports_notices,
+        'sports_events': sports_events,
+        'gallery_images': gallery_images,
+        'sports_happenings': sports_happenings,
+        'today': timezone.now().date(),
     }
     return render(request, 'core/sports.html', context)
 
@@ -474,3 +515,337 @@ def event_detail(request, pk):
         'breadcrumb': 'Event Details',
     }
     return render(request, 'core/event_detail.html', context)
+
+
+def infrastructure(request):
+    infrastructure_list = Infrastructure.objects.filter(is_active=True).prefetch_related('images').order_by('order', 'title')
+    
+    # If no data exists, pre-populate with default mock data for a stunning initial look
+    if not infrastructure_list.exists():
+        from .models import InfrastructureImage
+        s1 = Infrastructure.objects.create(
+            title="Scientific Laboratories",
+            description="Our state-of-the-art laboratories are fully equipped with advanced modern instruments to cater to both undergraduate and postgraduate course requirements. Each lab is properly ventilated, spacious, and designed with optimal safety features, allowing students to conduct research, experiments, and practical studies under expert mentorship. Specializations include Chemistry, Physics, Botany, Zoology, and Forestry.",
+            video_url="https://www.youtube.com/watch?v=NwbCZVm1exI",
+            order=1
+        )
+        InfrastructureImage.objects.create(
+            infrastructure=s1,
+            image_url="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/COLLEGE_BUILDING.jpg",
+            caption="Advanced Chemistry Laboratory",
+            order=1
+        )
+        InfrastructureImage.objects.create(
+            infrastructure=s1,
+            image_url="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/COLLEGE_BUILDING.jpg",
+            caption="Physics Instrumentation Room",
+            order=2
+        )
+
+        s2 = Infrastructure.objects.create(
+            title="Central Digital Library",
+            description="The Central Library serves as the academic heart of the institution, housing a comprehensive collection of over 15,000 reference books, journals, textbooks, and encyclopedias. Equipped with high-speed internet connectivity, the digital section provides students and faculty with seamless access to premium databases and resources, including INFLIBNET, SWAYAM, e-Pathshala, MOOCs, and the National Digital Library (NDL).",
+            video_url="",
+            order=2
+        )
+        InfrastructureImage.objects.create(
+            infrastructure=s2,
+            image_url="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/COLLEGE_BUILDING.jpg",
+            caption="Main Reading Hall & Book Stacks",
+            order=1
+        )
+        InfrastructureImage.objects.create(
+            infrastructure=s2,
+            image_url="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/COLLEGE_BUILDING.jpg",
+            caption="Digital Library & E-Resource Access Terminals",
+            order=2
+        )
+
+        s3 = Infrastructure.objects.create(
+            title="Advanced Computer Center",
+            description="Our advanced Computer Center is designed to support the growing digital needs of all academic streams. Equipped with the latest workstations, enterprise-grade software, and high-speed Wi-Fi, the lab provides an ideal environment for programming, database management, web development, and digital literacy. Regular workshops on emerging tech (Python, Web Tech) are conducted here.",
+            video_url="",
+            order=3
+        )
+        InfrastructureImage.objects.create(
+            infrastructure=s3,
+            image_url="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/COLLEGE_BUILDING.jpg",
+            caption="Main Computer Lab",
+            order=1
+        )
+        
+        infrastructure_list = Infrastructure.objects.filter(is_active=True).prefetch_related('images').order_by('order', 'title')
+
+    context = {
+        'infrastructure_list': infrastructure_list,
+        'page_title': 'Campus Infrastructure',
+        'breadcrumb': 'Infrastructure',
+    }
+    return render(request, 'core/infrastructure.html', context)
+
+
+def products(request):
+    products_list = Product.objects.filter(is_active=True).order_by('order', '-created_at')
+
+    # Seed data if blank
+    if not products_list.exists():
+        c_apparel, _ = ProductCategory.objects.get_or_create(name="Apparel")
+        c_drinkware, _ = ProductCategory.objects.get_or_create(name="Drinkware")
+        c_stationery, _ = ProductCategory.objects.get_or_create(name="Stationery")
+        Product.objects.create(
+            category=c_drinkware,
+            name="Chaitanya College Premium Mug",
+            description="High-quality ceramic coffee mug featuring the official college crest. Perfect for campus desks and alumni collection.",
+            price=150.00,
+            image_url="https://i.postimg.cc/k5Z5snNv/csac-naac.png",
+            in_stock=True,
+            order=1
+        )
+        Product.objects.create(
+            category=c_apparel,
+            name="CSAC Classic Cotton T-Shirt",
+            description="Super-soft 100% cotton crewneck t-shirt featuring the college branding. Available in multiple sizes.",
+            price=350.00,
+            image_url="https://i.postimg.cc/k5Z5snNv/csac-naac.png",
+            in_stock=True,
+            order=2
+        )
+        Product.objects.create(
+            category=c_stationery,
+            name="Academic Planner & Notebook Set",
+            description="Premium hardbound notebook and academic planner to track classes, schedules, and research notes.",
+            price=200.00,
+            image_url="https://i.postimg.cc/k5Z5snNv/csac-naac.png",
+            in_stock=False,
+            order=3
+        )
+        products_list = Product.objects.filter(is_active=True).order_by('order', '-created_at')
+
+    # Category Filtering logic
+    categories = ProductCategory.objects.all().order_by('order', 'name')
+    selected_category_slug = request.GET.get('category', '')
+
+    # Handle purchase interest form submission (fallback from card directly)
+    if request.method == 'POST':
+        form = ProductInquiryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Thank you! Your purchase interest has been submitted. Our team will contact you soon.")
+            return redirect('core:products')
+        else:
+            messages.error(request, "Failed to submit interest. Please correct form details.")
+    else:
+        form = ProductInquiryForm()
+
+    context = {
+        'products': products_list,
+        'categories': categories,
+        'selected_category_slug': selected_category_slug,
+        'form': form,
+        'page_title': 'Our Products',
+        'breadcrumb': 'Our Products',
+    }
+    return render(request, 'core/products.html', context)
+
+
+def product_detail(request, slug):
+    from django.shortcuts import get_object_or_404
+    product = get_object_or_404(Product, slug=slug, is_active=True)
+    reviews = product.reviews.filter(is_approved=True).order_by('-created_at')
+    images = product.images.all().order_by('order')
+
+    # Calculate average rating
+    rating_range = range(1, 6)
+    avg_rating = 0
+    if reviews.exists():
+        total_rating = sum(r.rating for r in reviews)
+        avg_rating = round(total_rating / reviews.count(), 1)
+        avg_rating_int = int(round(avg_rating))
+    else:
+        avg_rating_int = 0
+
+    # Initialize Forms
+    inquiry_form = ProductInquiryForm(initial={'product': product})
+    review_form = ProductReviewForm()
+
+    if request.method == 'POST':
+        if 'reviewer_name' in request.POST:
+            # Review form submission
+            review_form = ProductReviewForm(request.POST)
+            if review_form.is_valid():
+                review = review_form.save(commit=False)
+                review.product = product
+                review.save()
+                messages.success(request, "Your review has been submitted successfully!")
+                return redirect('core:product_detail', slug=product.slug)
+            else:
+                messages.error(request, "Failed to submit review. Please check the form fields.")
+        else:
+            # Inquiry/Buy form submission
+            inquiry_form = ProductInquiryForm(request.POST)
+            if inquiry_form.is_valid():
+                inquiry_form.save()
+                messages.success(request, "Thank you! Your purchase interest has been submitted. Our team will contact you soon.")
+                return redirect('core:product_detail', slug=product.slug)
+            else:
+                messages.error(request, "Failed to submit interest. Please check the inquiry form fields.")
+
+    context = {
+        'product': product,
+        'reviews': reviews,
+        'avg_rating': avg_rating,
+        'avg_rating_int': avg_rating_int,
+        'rating_range': rating_range,
+        'images': images,
+        'inquiry_form': inquiry_form,
+        'review_form': review_form,
+        'page_title': product.name,
+        'breadcrumb': 'Our Products',
+    }
+    return render(request, 'core/product_detail.html', context)
+
+
+def library(request):
+    from .models import LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion
+    from .forms import LibraryBookSuggestionForm
+    from django.contrib import messages
+    from django.shortcuts import redirect, render
+
+    # Get settings or create default
+    settings_obj = LibraryPageSettings.objects.first()
+    if not settings_obj:
+        settings_obj = LibraryPageSettings.objects.create()
+
+    # Get categories & resources
+    categories = LibraryBookCategory.objects.all().order_by('order', 'id')
+    resources = LibraryResource.objects.all().order_by('order', 'id')
+
+    # Handle Suggestion Form submission
+    if request.method == 'POST':
+        form = LibraryBookSuggestionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Thank you! Your book recommendation has been submitted successfully to the Library Committee.")
+            return redirect('core:library')
+        else:
+            messages.error(request, "Failed to submit recommendation. Please correct the fields below.")
+    else:
+        form = LibraryBookSuggestionForm()
+
+    context = {
+        'page_title': 'Library',
+        'breadcrumb': 'Smt. Urmila Devi Smriti Pustkaalaya',
+        'settings': settings_obj,
+        'sections': settings_obj.get_sections_list(),
+        'categories': categories,
+        'resources': resources,
+        'form': form,
+    }
+    return render(request, 'core/library.html', context)
+
+
+def sitemap(request):
+    context = {
+        'page_title': 'Sitemap',
+        'breadcrumb': 'Website Sitemap',
+    }
+    return render(request, 'core/sitemap.html', context)
+
+
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404
+
+def staff_required(view_func):
+    return user_passes_test(lambda u: u.is_staff or u.is_superuser, login_url='/admin/login/')(view_func)
+
+@staff_required
+def manage_navbar(request):
+    from .utils import seed_default_menu_items
+    seed_default_menu_items()
+    
+    menu_items = MenuItem.objects.filter(parent=None).prefetch_related('children', 'children__children')
+    form = MenuItemForm()
+    
+    context = {
+        'menu_items': menu_items,
+        'form': form,
+        'page_title': 'Manage Navigation Bar',
+        'breadcrumb': 'Manage Navbar',
+    }
+    return render(request, 'core/manage_navbar.html', context)
+
+@staff_required
+def add_menu_item(request):
+    if request.method == 'POST':
+        form = MenuItemForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Navbar menu item added successfully!")
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Error in {field}: {error}")
+    return redirect('core:manage_navbar')
+
+@staff_required
+def edit_menu_item(request, pk):
+    item = get_object_or_404(MenuItem, pk=pk)
+    if request.method == 'POST':
+        form = MenuItemForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Navbar menu item '{item.title}' updated successfully!")
+            return redirect('core:manage_navbar')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Error in {field}: {error}")
+    else:
+        form = MenuItemForm(instance=item)
+        
+    context = {
+        'form': form,
+        'item': item,
+        'page_title': f"Edit Menu Item: {item.title}",
+        'breadcrumb': "Edit Menu Item",
+    }
+    return render(request, 'core/edit_menu_item.html', context)
+
+@staff_required
+def delete_menu_item(request, pk):
+    item = get_object_or_404(MenuItem, pk=pk)
+    title = item.title
+    item.delete()
+    messages.success(request, f"Navbar menu item '{title}' and all its submenus were removed successfully.")
+    return redirect('core:manage_navbar')
+
+@staff_required
+def move_menu_item(request, pk, direction):
+    item = get_object_or_404(MenuItem, pk=pk)
+    siblings = list(MenuItem.objects.filter(parent=item.parent).order_by('order', 'id'))
+    
+    # Re-index sibling orders from 1 to N to prevent overlapping order values
+    for idx, sib in enumerate(siblings):
+        sib.order = idx + 1
+        sib.save()
+        
+    # Find current item index
+    try:
+        curr_idx = next(i for i, sib in enumerate(siblings) if sib.pk == item.pk)
+    except StopIteration:
+        curr_idx = -1
+        
+    if curr_idx != -1:
+        if direction == 'up' and curr_idx > 0:
+            siblings[curr_idx].order, siblings[curr_idx - 1].order = siblings[curr_idx - 1].order, siblings[curr_idx].order
+            siblings[curr_idx].save()
+            siblings[curr_idx - 1].save()
+            messages.success(request, f"Moved '{item.title}' up.")
+        elif direction == 'down' and curr_idx < len(siblings) - 1:
+            siblings[curr_idx].order, siblings[curr_idx + 1].order = siblings[curr_idx + 1].order, siblings[curr_idx].order
+            siblings[curr_idx].save()
+            siblings[curr_idx + 1].save()
+            messages.success(request, f"Moved '{item.title}' down.")
+            
+    return redirect('core:manage_navbar')
+

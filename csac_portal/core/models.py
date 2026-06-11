@@ -17,6 +17,36 @@ class SiteSettings(models.Model):
     google_maps_embed = models.TextField(blank=True)
     established_year = models.IntegerField(default=2001)
 
+    # Style fields for college_name_en
+    college_name_en_font_family = models.CharField(max_length=100, default="Roboto Slab", verbose_name="College Name (EN) Font Family")
+    college_name_en_google_font_url = models.URLField(blank=True, verbose_name="College Name (EN) Google Font Link", help_text="Google Fonts stylesheet URL")
+    college_name_en_font_size = models.CharField(max_length=50, default="24px", verbose_name="College Name (EN) Font Size")
+    college_name_en_font_color = models.CharField(max_length=20, default="#E61013", verbose_name="College Name (EN) Font Color")
+
+    # Style fields for college_name_hi
+    college_name_hi_font_family = models.CharField(max_length=100, default="Roboto Slab", verbose_name="College Name (HI) Font Family")
+    college_name_hi_google_font_url = models.URLField(blank=True, verbose_name="College Name (HI) Google Font Link", help_text="Google Fonts stylesheet URL")
+    college_name_hi_font_size = models.CharField(max_length=50, default="24px", verbose_name="College Name (HI) Font Size")
+    college_name_hi_font_color = models.CharField(max_length=20, default="#E61013", verbose_name="College Name (HI) Font Color")
+
+    # Style fields for tagline
+    tagline_font_family = models.CharField(max_length=100, default="Roboto Slab", verbose_name="Tagline Font Family")
+    tagline_google_font_url = models.URLField(blank=True, verbose_name="Tagline Google Font Link", help_text="Google Fonts stylesheet URL")
+    tagline_font_size = models.CharField(max_length=50, default="16px", verbose_name="Tagline Font Size")
+    tagline_font_color = models.CharField(max_length=20, default="#E61013", verbose_name="Tagline Font Color")
+
+    # Style fields for address_line1
+    address_line1_font_family = models.CharField(max_length=100, default="Roboto Slab", verbose_name="Address Line 1 Font Family")
+    address_line1_google_font_url = models.URLField(blank=True, verbose_name="Address Line 1 Google Font Link", help_text="Google Fonts stylesheet URL")
+    address_line1_font_size = models.CharField(max_length=50, default="20px", verbose_name="Address Line 1 Font Size")
+    address_line1_font_color = models.CharField(max_length=20, default="#000000", verbose_name="Address Line 1 Font Color")
+
+    # Style fields for address_line2
+    address_line2_font_family = models.CharField(max_length=100, default="Roboto Slab", verbose_name="Address Line 2 Font Family")
+    address_line2_google_font_url = models.URLField(blank=True, verbose_name="Address Line 2 Google Font Link", help_text="Google Fonts stylesheet URL")
+    address_line2_font_size = models.CharField(max_length=50, default="16px", verbose_name="Address Line 2 Font Size")
+    address_line2_font_color = models.CharField(max_length=20, default="#000000", verbose_name="Address Line 2 Font Color")
+
     # Logo fields
     college_logo = models.ImageField(upload_to='logos/', blank=True, null=True, verbose_name="College Logo (Header/Footer)")
     college_logo_mobile = models.ImageField(upload_to='logos/', blank=True, null=True, verbose_name="Mobile Logo")
@@ -270,6 +300,7 @@ class Notice(models.Model):
         ('exam', 'Exam'),
         ('admission', 'Admission'),
         ('students', 'Students'),
+        ('sports', 'Sports'),
     ]
     title = models.CharField(max_length=300)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='latest')
@@ -371,6 +402,11 @@ class Event(models.Model):
     registration_link = models.URLField(blank=True, max_length=500, help_text="External URL for online registration (e.g. Google Form)")
     youtube_url = models.URLField(blank=True, max_length=500, help_text="Optional YouTube video URL (watch link or short link)")
     is_active = models.BooleanField(default=True)
+    is_sports_event = models.BooleanField(
+        default=False,
+        verbose_name="Is Sports Event",
+        help_text="Check to show this event in the Sports page Upcoming Events section"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -395,7 +431,7 @@ class Event(models.Model):
         match = re.search(regex, self.youtube_url)
         if match:
             video_id = match.group(1)
-            return f"https://www.youtube.com/embed/{video_id}"
+            return f"https://www.youtube-nocookie.com/embed/{video_id}"
         return self.youtube_url
 
 
@@ -424,6 +460,7 @@ class Happening(models.Model):
     banner_image_url = models.URLField(blank=True, max_length=500, help_text="Custom header banner image URL")
     is_nss_activity = models.BooleanField(default=False, verbose_name="Is NSS Activity", help_text="Check if this event/happening is part of NSS activities and should appear in the NSS page slider")
     is_iic_activity = models.BooleanField(default=False, verbose_name="Is IIC Activity", help_text="Check if this event/happening is part of IIC activities and should appear in the IIC page slider")
+    is_sports_activity = models.BooleanField(default=False, verbose_name="Is Sports Activity", help_text="Check if this event/happening is a sports activity and should appear in the Sports page")
 
     class Meta:
         ordering = ['order', '-date']
@@ -798,6 +835,7 @@ class PageBreadcrumb(models.Model):
         ('grievances_submit',        'Submit a Grievance'),
         # Custom pages
         ('custom_page',              'Custom Page'),
+        ('infrastructure',           'Infrastructure'),
     ]
 
     page_key = models.CharField(
@@ -987,4 +1025,476 @@ class IICGalleryImage(models.Model):
         return f"{settings.MEDIA_URL}{self.image_url}"
 
 
+class CampusMedia(models.Model):
+    MEDIA_TYPE_CHOICES = [
+        ('image', 'Image'),
+        ('video', 'Video'),
+    ]
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES, default='video')
+    title = models.CharField(max_length=200, help_text="e.g. Cleaner, Greener & Sustainable")
+    image = models.ImageField(upload_to='campus_media/', blank=True, null=True, help_text="Upload cover image / photo")
+    image_url = models.URLField(blank=True, help_text="External cover image URL if not uploading locally")
+    video_url = models.URLField(blank=True, help_text="YouTube video URL (for Video type)")
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Campus Media / Video"
+        verbose_name_plural = "Campus Media & Videos"
+
+    def __str__(self):
+        return f"[{self.get_media_type_display()}] {self.title}"
+
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        if self.image_url:
+            return self.image_url
+        if self.media_type == 'video' and self.video_url:
+            video_id = self.get_youtube_video_id()
+            if video_id:
+                return f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
+        from django.templatetags.static import static
+        return static('assets/images/chaitanya_video.jpg')
+
+    def get_youtube_video_id(self):
+        if not self.video_url:
+            return None
+        import re
+        regex = r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
+        match = re.search(regex, self.video_url)
+        return match.group(1) if match else None
+
+
+
+class Infrastructure(models.Model):
+    title = models.CharField(max_length=200, help_text="e.g. Laboratories, Library, Seminar Hall")
+    slug = models.SlugField(unique=True, max_length=200, blank=True, help_text="Auto-generated slug (leave blank to auto-generate)")
+    description = models.TextField(help_text="Detailed description of the infrastructure")
+    video_url = models.URLField(blank=True, help_text="Optional YouTube video URL for a tour/showcase of this infrastructure")
+    order = models.PositiveIntegerField(default=0, help_text="Order in which it will be displayed")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'title']
+        verbose_name = "Infrastructure Section"
+        verbose_name_plural = "Infrastructure Sections"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def get_youtube_video_id(self):
+        if not self.video_url:
+            return None
+        import re
+        regex = r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
+        match = re.search(regex, self.video_url)
+        return match.group(1) if match else None
+
+    def get_video_embed_url(self):
+        video_id = self.get_youtube_video_id()
+        if video_id:
+            return f"https://www.youtube-nocookie.com/embed/{video_id}"
+        return None
+
+
+class InfrastructureImage(models.Model):
+    infrastructure = models.ForeignKey(Infrastructure, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='infrastructure/', blank=True, null=True, help_text="Upload local image")
+    image_url = models.URLField(blank=True, help_text="Or enter external image URL")
+    caption = models.CharField(max_length=250, blank=True, help_text="Optional caption for the image")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Infrastructure Image"
+        verbose_name_plural = "Infrastructure Images"
+
+    def __str__(self):
+        return f"Image for {self.infrastructure.title} ({self.id})"
+
+    def get_image(self):
+        return self.image.url if self.image else self.image_url
+
+
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True, verbose_name="Category Name")
+    slug = models.SlugField(max_length=120, unique=True, blank=True)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = "Product Category"
+        verbose_name_plural = "Product Categories"
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
+class Product(models.Model):
+    category = models.ForeignKey(ProductCategory, on_delete=models.SET_NULL, null=True, blank=True, related_name='products', verbose_name="Category")
+    name = models.CharField(max_length=200, verbose_name="Product Name")
+    slug = models.SlugField(max_length=200, unique=True, blank=True, null=True)
+    description = models.TextField(verbose_name="Description", help_text="Detailed product description")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Price (INR)")
+    image = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Product Image")
+    image_url = models.URLField(blank=True, max_length=500, verbose_name="External Image URL", help_text="Fallback URL if no image is uploaded")
+    in_stock = models.BooleanField(default=True, verbose_name="In Stock", help_text="Toggle stock availability status")
+    order = models.PositiveIntegerField(default=0, verbose_name="Display Order")
+    is_active = models.BooleanField(default=True, verbose_name="Is Active", help_text="Toggle visibility on the frontend")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        return self.image_url or "https://i.postimg.cc/k5Z5snNv/csac-naac.png"
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name="Product")
+    image = models.ImageField(upload_to='products/gallery/', blank=True, null=True, help_text="Upload gallery image")
+    image_url = models.URLField(blank=True, max_length=500, verbose_name="External Image URL", help_text="Or external URL")
+    caption = models.CharField(max_length=250, blank=True, help_text="Optional caption")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Product Image"
+        verbose_name_plural = "Product Images"
+
+    def __str__(self):
+        return f"Image for {self.product.name} ({self.id})"
+
+    def get_image(self):
+        return self.image.url if self.image else self.image_url
+
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews', verbose_name="Product")
+    reviewer_name = models.CharField(max_length=100, verbose_name="Your Name")
+    reviewer_email = models.EmailField(verbose_name="Email Address")
+    rating = models.PositiveIntegerField(default=5, verbose_name="Rating (1-5)")
+    review_text = models.TextField(verbose_name="Review Content")
+    is_approved = models.BooleanField(default=True, verbose_name="Approved", help_text="Toggle visibility on frontend")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Product Review"
+        verbose_name_plural = "Product Reviews"
+
+    def __str__(self):
+        return f"Review ({self.rating}*) by {self.reviewer_name} for {self.product.name}"
+
+
+class ProductInquiry(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='inquiries', verbose_name="Product")
+    name = models.CharField(max_length=100, verbose_name="Full Name")
+    email = models.EmailField(verbose_name="Email Address")
+    phone = models.CharField(max_length=20, verbose_name="Phone Number")
+    message = models.TextField(blank=True, verbose_name="Additional Message/Inquiry Details")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Product Inquiry"
+        verbose_name_plural = "Product Inquiries"
+
+    def __str__(self):
+        return f"Inquiry from {self.name} for {self.product.name}"
+
+
+class SportsPageSettings(models.Model):
+    """Singleton model for Sports page content settings."""
+    page_intro_title = models.CharField(max_length=200, default="Sports & Athletics at CSAC")
+    page_intro = models.TextField(
+        default="Chaitanya Science and Arts College believes in the all-round development of its students. Physical education and sports form an integral part of our curriculum. The college boasts excellent sports infrastructure, training programs and coaches that encourage students to participate at regional, state, and national levels.",
+        help_text="Introduction paragraph shown at the top of the Sports page."
+    )
+    facilities = models.TextField(
+        default="Outdoor Sports Ground (Cricket, Football, Athletics)\nIndoor Games Arena (Table Tennis, Chess, Carrom, Badminton)\nFitness Center & Gymnasium\nVolleyball & Basketball Courts\nSports Library & Media Room",
+        help_text="List of sports facilities, one per line. Displayed as a bullet list."
+    )
+    achievements = models.TextField(
+        default="Annual Athletic Meet — Inter-departmental athletics challenges\nChaitanya Trophy — Inter-collegiate Cricket & Volleyball tournament\nYoga Day Celebrations — Campus-wide training on International Yoga Day",
+        help_text="Sports achievements/events, one per line."
+    )
+    policies = models.TextField(
+        default="Sports quota admissions for outstanding regional/national players\nCash incentives and fee concessions for tournament winners\nSpecial academic support and attendance relief during tournaments",
+        help_text="Sports policies/benefits, one per line."
+    )
+    show_notices = models.BooleanField(default=True, verbose_name="Show Sports Notices Section")
+    show_events = models.BooleanField(default=True, verbose_name="Show Upcoming Sports Events Section")
+    show_gallery = models.BooleanField(default=True, verbose_name="Show Sports Gallery Section")
+    show_happenings = models.BooleanField(default=True, verbose_name="Show Sports Happenings Section")
+
+    class Meta:
+        verbose_name = "Sports Page Settings"
+        verbose_name_plural = "Sports Page Settings"
+
+    def __str__(self):
+        return "Sports Page Settings"
+
+    def get_facilities_list(self):
+        return [line.strip() for line in self.facilities.splitlines() if line.strip()]
+
+    def get_achievements_list(self):
+        return [line.strip() for line in self.achievements.splitlines() if line.strip()]
+
+    def get_policies_list(self):
+        return [line.strip() for line in self.policies.splitlines() if line.strip()]
+
+
+class SportsGalleryImage(models.Model):
+    image = models.ImageField(upload_to='sports/gallery/', blank=True, null=True)
+    image_url = models.URLField(blank=True, max_length=500, help_text="External URL for image if not uploaded locally")
+    caption = models.CharField(max_length=200, blank=True)
+    sport_tag = models.CharField(max_length=100, blank=True, help_text="e.g. Cricket, Volleyball, Athletics")
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Sports Gallery Image"
+        verbose_name_plural = "Sports Gallery Images"
+
+    def __str__(self):
+        return self.caption or f"Sports Gallery Image {self.id}"
+
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        if not self.image_url:
+            return ""
+        return self.image_url
+
+
+class NEPTab(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Tab Title", help_text="e.g. NEP Syllabus, General Guidelines")
+    description = CKEditor5Field('Description', config_name='extends', blank=True, help_text="The main rich text content displayed inside this tab.")
+    order = models.PositiveIntegerField(default=0, help_text="For ordering tabs on the page.")
+    is_active = models.BooleanField(default=True, verbose_name="Active")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'title']
+        verbose_name = "NEP Tab"
+        verbose_name_plural = "NEP Tabs"
+
+    def __str__(self):
+        return self.title
+
+
+class NEPTabFile(models.Model):
+    tab = models.ForeignKey(NEPTab, on_delete=models.CASCADE, related_name='files', verbose_name="NEP Tab")
+    file = models.FileField(upload_to='nep/files/', verbose_name="Upload File")
+    title = models.CharField(max_length=250, verbose_name="File Title/Label", help_text="e.g. NEP Syllabus PDF, Academic Credit Rules")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "NEP Tab File"
+        verbose_name_plural = "NEP Tab Files"
+
+    def __str__(self):
+        return f"{self.title} (under {self.tab.title})"
+
+
+class NEPTabLink(models.Model):
+    tab = models.ForeignKey(NEPTab, on_delete=models.CASCADE, related_name='links', verbose_name="NEP Tab")
+    url = models.URLField(max_length=500, verbose_name="Web Link / URL")
+    title = models.CharField(max_length=250, verbose_name="Link Label/Text", help_text="e.g. Official ABC Portal, Digilocker Website")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "NEP Tab Link"
+        verbose_name_plural = "NEP Tab Links"
+
+    def __str__(self):
+        return f"{self.title} (under {self.tab.title})"
+
+
+class LibraryPageSettings(models.Model):
+    page_intro_title = models.CharField(max_length=200, default="Learning Resources of the College: Smt. Urmila Devi Smriti Pustkaalaya")
+    page_intro = models.TextField(
+        default="Discover the heart of academic exploration at the College Library, established in 2001 in loving memory of Smt. Urmila Devi. More than just a repository of knowledge, our library is a dynamic hub that caters to the diverse needs of both faculty and students."
+    )
+    about_library_title = models.CharField(max_length=200, default="About The Library")
+    about_library_text = models.TextField(
+        default="With a spacious environment welcoming up to 100 readers, we offer semi-automated services and house an impressive collection of 2000 physical books and research journals. Access to digital subscriptions such as INFIBNET and open-access journals enriches research opportunities. With RFID technology ensuring seamless operations, our library hosts a variety of engaging activities, including orientation programs, faculty development seminars, and participatory reading club activities. Guided by our dedicated Library Committee, we are committed to fostering a culture of learning and intellectual exploration. Welcome to your gateway to knowledge and inspiration."
+    )
+    future_plan_title = models.CharField(max_length=200, default="Future Plan")
+    future_plan_text = models.TextField(
+        default="The future plan for the library involves expanding its physical space and digital infrastructure to accommodate growth and enhance accessibility. This includes fully automating processes like book checkouts and inventory management, while also prioritizing the digitization of collections and integration of digital resources. Collaborative partnerships, user training, and ongoing evaluation will ensure that the library remains a cutting-edge hub for research and learning in the digital age."
+    )
+    library_image = models.ImageField(upload_to='library/', blank=True, null=True)
+    library_image_url = models.CharField(max_length=500, blank=True, default="/static/assets/images/feature/0001.png")
+    sections_text = models.TextField(
+        default="Reference Section\nCirculation Section\nPeriodical Section",
+        help_text="Enter one section per line."
+    )
+    about_services_text = models.TextField(
+        default="The library has automated all its library activities to provide effective and wide range of academic resources such as books, journals, online databases."
+    )
+    new_suggestion_text = models.TextField(
+        default="The library always encourages all students and faculty to recommend new books in order to strengthen their collection."
+    )
+
+    class Meta:
+        verbose_name = "Library Page Settings"
+        verbose_name_plural = "Library Page Settings"
+
+    def __str__(self):
+        return "Library Page Settings"
+
+    def get_sections_list(self):
+        return [line.strip() for line in self.sections_text.splitlines() if line.strip()]
+
+    def get_image(self):
+        if self.library_image:
+            return self.library_image.url
+        return self.library_image_url or "/static/assets/images/feature/0001.png"
+
+
+class LibraryBookCategory(models.Model):
+    category_name = models.CharField(max_length=200, verbose_name="Category")
+    num_books = models.PositiveIntegerField(verbose_name="No. of Books")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Library Book Category"
+        verbose_name_plural = "Library Book Categories"
+
+    def __str__(self):
+        return f"{self.category_name} ({self.num_books} books)"
+
+
+class LibraryResource(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Name")
+    website_url = models.URLField(max_length=500, verbose_name="Website")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Library Resource"
+        verbose_name_plural = "Library Resources"
+
+    def __str__(self):
+        return self.name
+
+
+class LibraryBookSuggestion(models.Model):
+    book_title = models.CharField(max_length=200, verbose_name="Book Title")
+    author = models.CharField(max_length=200, verbose_name="Author")
+    recommended_by = models.CharField(max_length=150, verbose_name="Recommended By")
+    email = models.EmailField(verbose_name="Email Address")
+    reason = models.TextField(blank=True, verbose_name="Reason for Suggestion")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Library Book Suggestion"
+        verbose_name_plural = "Library Book Suggestions"
+
+    def __str__(self):
+        return f"Suggestion: {self.book_title} by {self.recommended_by}"
+
+
+class LibraryGalleryImage(models.Model):
+    settings = models.ForeignKey(LibraryPageSettings, on_delete=models.CASCADE, related_name='images', verbose_name="Library Settings")
+    image = models.ImageField(upload_to='library/gallery/', blank=True, null=True, help_text="Upload local image")
+    image_url = models.URLField(blank=True, max_length=500, help_text="Or enter external image URL")
+    caption = models.CharField(max_length=250, blank=True, help_text="Optional caption for the image")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Library Gallery Image"
+        verbose_name_plural = "Library Gallery Images"
+
+    def __str__(self):
+        return self.caption or f"Library Image {self.id} for settings {self.settings.id}"
+
+    def get_image(self):
+        if self.image:
+            return self.image.url
+        return self.image_url or ""
+
+
+class MenuItem(models.Model):
+    title = models.CharField(max_length=100, help_text="Display name for the menu item")
+    url = models.CharField(
+        max_length=255, 
+        help_text="URL path (e.g. /about/) or named Django URL pattern (e.g. core:about) or external link (e.g. https://...)"
+    )
+    is_named_url = models.BooleanField(
+        default=False, 
+        verbose_name="Is Named URL",
+        help_text="Check if the URL is a Django URL name pattern (e.g. 'core:about')"
+    )
+    parent = models.ForeignKey(
+        'self', 
+        on_delete=models.CASCADE, 
+        null=True, 
+        blank=True, 
+        related_name='children',
+        help_text="Select parent menu item. Leave blank to make it a top-level menu."
+    )
+    order = models.PositiveIntegerField(default=0, help_text="Display order (lower numbers come first)")
+    is_active = models.BooleanField(default=True, help_text="Toggle visibility on the navbar")
+    open_in_new_tab = models.BooleanField(default=False, verbose_name="Open in new tab")
+
+    class Meta:
+        ordering = ['order', 'id']
+        verbose_name = "Menu Item"
+        verbose_name_plural = "Menu Items"
+
+    def __str__(self):
+        if self.parent:
+            return f"{self.parent.title} > {self.title}"
+        return self.title
+
+    def get_absolute_url(self):
+        if self.is_named_url:
+            from django.urls import reverse, NoReverseMatch
+            try:
+                # Handle URLs with arguments if they are split by spaces, e.g. "academics:department_detail 'hindi'"
+                parts = self.url.split()
+                url_name = parts[0]
+                url_args = [arg.strip("'\"") for arg in parts[1:]]
+                return reverse(url_name, args=url_args)
+            except NoReverseMatch:
+                return self.url
+        return self.url
