@@ -849,3 +849,53 @@ def move_menu_item(request, pk, direction):
             
     return redirect('core:manage_navbar')
 
+
+@staff_required
+def edit_leadership(request, role):
+    if role not in ['director', 'chairman', 'principal']:
+        return redirect('core:home')
+        
+    from .models import Leadership
+    from .forms import LeadershipForm
+    
+    member = Leadership.objects.filter(role=role).first()
+    if not member:
+        # Pre-populate defaults if none exists
+        if role == 'director':
+            name = 'Mr Veerendra Tiwari'
+            msg = 'Welcome to Chaitanya Science and Arts College, where our mission is to empower rural youth, especially those from economically disadvantaged backgrounds, with high-quality education. We are dedicated to fostering academic excellence, personal growth, and social responsibility in our students. Together, we aim to build a brighter future for individuals and the community.'
+        elif role == 'chairman':
+            name = 'Mr Veerendra Tiwari'
+            msg = 'Welcome to Chaitanya Science and Arts College, where our mission is to empower rural youth, especially those from economically disadvantaged backgrounds, with high-quality education. We are dedicated to fostering academic excellence, personal growth, and social responsibility in our students. Together, we aim to build a brighter future for individuals and the community.'
+        else:
+            name = 'Dr Vinod Kumar Gupta'
+            msg = 'Welcome to Chaitanya Science and Arts College, where we provide high-quality education to empower rural youth and foster academic and personal growth. Our goal is to help students achieve excellence and contribute positively to society. We are committed to nurturing innovation, critical thinking, and leadership skills in every student.'
+            
+        member = Leadership.objects.create(
+            role=role,
+            name=name,
+            message=msg
+        )
+        
+    if request.method == 'POST':
+        form = LeadershipForm(request.POST, request.FILES, instance=member)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"{member.get_role_display()} message updated successfully!")
+            return redirect('core:home')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Error in {field}: {error}")
+    else:
+        form = LeadershipForm(instance=member)
+        
+    context = {
+        'form': form,
+        'member': member,
+        'page_title': f"Edit {member.get_role_display()} Message",
+        'breadcrumb': f"Edit {member.get_role_display()}",
+    }
+    return render(request, 'core/edit_leadership.html', context)
+
+

@@ -34,4 +34,5 @@ urlpatterns = [
     path('manage-navbar/edit/<int:pk>/', views.edit_menu_item, name='edit_menu_item'),
     path('manage-navbar/delete/<int:pk>/', views.delete_menu_item, name='delete_menu_item'),
     path('manage-navbar/move/<int:pk>/<str:direction>/', views.move_menu_item, name='move_menu_item'),
+    path('leadership/edit/<str:role>/', views.edit_leadership, name='edit_leadership'),
 ]

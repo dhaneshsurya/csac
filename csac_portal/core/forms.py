@@ -718,3 +718,22 @@ class MenuItemForm(forms.ModelForm):
                     f"'{url}' is not a valid Django URL pattern or cannot be resolved with the provided arguments."
                 )
         return cleaned_data
+
+
+from .models import Leadership
+
+class LeadershipForm(forms.ModelForm):
+    class Meta:
+        model = Leadership
+        fields = ['name', 'qualification', 'photo', 'message']
+        widgets = {
+            'message': forms.Textarea(attrs={'rows': 6}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput) and field_name != 'photo':
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
