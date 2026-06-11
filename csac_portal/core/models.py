@@ -552,6 +552,12 @@ class AboutPage(models.Model):
     about_us_description_2 = CKEditor5Field('About Us Description 2', config_name='extends', blank=True, default="")
     about_us_description_3 = CKEditor5Field('About Us Description 3', config_name='extends', blank=True, default="")
     about_us_image_url = models.CharField(max_length=500, default="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/COLLEGE_BUILDING.jpg")
+    about_us_image = models.ImageField(
+        upload_to='about/',
+        blank=True, null=True,
+        verbose_name="About Us Main Image",
+        help_text="Upload a local image file to display in the main About Us section."
+    )
 
     # Stats next to image
     stat1_value = models.CharField(max_length=50, default="8000+")
@@ -603,6 +609,11 @@ class AboutPage(models.Model):
 
     def __str__(self):
         return self.page_title
+
+    def get_about_us_image(self):
+        if self.about_us_image:
+            return self.about_us_image.url
+        return self.about_us_image_url
 
     def get_breadcrumb_image(self):
         """Returns the breadcrumb image URL: uploaded file > external URL > empty."""

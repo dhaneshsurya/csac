@@ -297,7 +297,7 @@ class AboutPageAdmin(admin.ModelAdmin):
             'fields': ('page_title', 'breadcrumb_image', 'breadcrumb_image_url')
         }),
         ('About Us Main Section', {
-            'fields': ('about_us_title', 'about_us_description_1', 'about_us_description_2', 'about_us_description_3', 'about_us_image_url')
+            'fields': ('about_us_title', 'about_us_description_1', 'about_us_description_2', 'about_us_description_3', 'about_us_image', 'about_us_image_url')
         }),
         ('Counter Stats (Next to Image)', {
             'fields': (
