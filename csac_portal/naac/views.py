@@ -5,11 +5,27 @@ from .models import NAACDocument, IQACMember, NAACCriteria, NAACInfo
 def naac_home(request):
     naac_info = NAACInfo.objects.first()
     general_docs = NAACDocument.objects.filter(doc_type='naac')
-    criteria = NAACCriteria.objects.all()
+    metrics = NAACCriteria.objects.all().order_by('order', 'criterion_number')
+
+    criteria_groups = [
+        {'id': 'I', 'key': '1', 'name': 'Criterion I – Curricular Aspects', 'metrics': []},
+        {'id': 'II', 'key': '2', 'name': 'Criterion II – Teaching-Learning and Evaluation', 'metrics': []},
+        {'id': 'III', 'key': '3', 'name': 'Criterion III – Research, Innovations and Extension', 'metrics': []},
+        {'id': 'IV', 'key': '4', 'name': 'Criterion IV – Infrastructure and Learning Resources', 'metrics': []},
+        {'id': 'V', 'key': '5', 'name': 'Criterion V – Student Support and Progression', 'metrics': []},
+        {'id': 'VI', 'key': '6', 'name': 'Criterion VI – Governance, Leadership and Management', 'metrics': []},
+        {'id': 'VII', 'key': '7', 'name': 'Criterion VII – Institutional Values and Best Practices', 'metrics': []},
+    ]
+
+    group_map = {g['key']: g for g in criteria_groups}
+    for metric in metrics:
+        if metric.criterion in group_map:
+            group_map[metric.criterion]['metrics'].append(metric)
+
     context = {
         'naac_info': naac_info,
         'general_docs': general_docs,
-        'criteria': criteria,
+        'criteria_groups': criteria_groups,
         'page_title': 'NAAC',
         'breadcrumb': 'NAAC Accreditation',
     }

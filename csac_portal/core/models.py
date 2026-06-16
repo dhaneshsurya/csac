@@ -55,6 +55,10 @@ class SiteSettings(models.Model):
     logo4 = models.ImageField(upload_to='logos/', blank=True, null=True, verbose_name="Logo 4")
     logo5 = models.ImageField(upload_to='logos/', blank=True, null=True, verbose_name="Logo 5")
 
+    # Header Image Layout fields
+    use_image_header = models.BooleanField(default=False, verbose_name="Use Image Header", help_text="Check this to display the custom header image banner instead of the default text and logos.")
+    header_image = models.ImageField(upload_to='headers/', blank=True, null=True, verbose_name="Header Image (Banner)", help_text="Upload a custom header image banner. This will replace the text header and logos if 'Use Image Header' is checked.")
+
     class Meta:
         verbose_name = "Site Settings"
         verbose_name_plural = "Site Settings"

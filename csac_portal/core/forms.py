@@ -257,7 +257,7 @@ class SiteSettingsForm(forms.ModelForm):
         excluded_fields = [
             'college_logo', 'college_logo_mobile', 'logo2', 'logo3', 'logo4', 'logo5',
             'college_name_en_font_color', 'college_name_hi_font_color', 'tagline_font_color',
-            'address_line1_font_color', 'address_line2_font_color'
+            'address_line1_font_color', 'address_line2_font_color', 'header_image'
         ]
         for field_name, field in self.fields.items():
             if not isinstance(field.widget, forms.CheckboxInput) and field_name not in excluded_fields:

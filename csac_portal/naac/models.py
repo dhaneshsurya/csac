@@ -51,7 +51,22 @@ class IQACMember(models.Model):
 
 
 class NAACCriteria(models.Model):
-    criterion_number = models.CharField(max_length=5)
+    CRITERION_CHOICES = [
+        ('1', 'Criterion I'),
+        ('2', 'Criterion II'),
+        ('3', 'Criterion III'),
+        ('4', 'Criterion IV'),
+        ('5', 'Criterion V'),
+        ('6', 'Criterion VI'),
+        ('7', 'Criterion VII'),
+    ]
+    criterion = models.CharField(
+        max_length=2,
+        choices=CRITERION_CHOICES,
+        default='1',
+        verbose_name="Criterion"
+    )
+    criterion_number = models.CharField(max_length=10, verbose_name="Metric Number")
     title = models.CharField(max_length=300)
     description = models.TextField(blank=True)
     document = models.FileField(upload_to='naac/criteria/', blank=True)

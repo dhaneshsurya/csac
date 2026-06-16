@@ -84,12 +84,92 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
     font-size: 9px;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+/* Floating Social Media Bar */
+.social-float-bar {
+    position: fixed;
+    left: 0;
+    top: 250px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.social-float-link {
+    color: #ffffff !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.social-float-link.facebook {
+    background: linear-gradient(135deg, #1877f2, #0d52b9);
+}
+.social-float-link.youtube {
+    background: linear-gradient(135deg, #ff0000, #c30000);
+}
+.social-float-link.instagram {
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+.social-float-link:hover {
+    width: 52px; /* Expands slightly on hover */
+}
+.social-float-link i {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+.social-float-link:hover i {
+    transform: scale(1.18) rotate(10deg);
+}
+@media only screen and (max-width: 768px) {
+    .social-float-bar {
+        top: auto;
+        bottom: 20px;
+        left: 0;
+        gap: 6px;
+    }
+    .social-float-link {
+        width: 38px;
+        height: 38px;
+        border-radius: 0 6px 6px 0;
+    }
+    .social-float-link:hover {
+        width: 38px; /* Disable expand on mobile hover */
+    }
+    .social-float-link i {
+        font-size: 16px;
+    }
+}
 </style>
 {% block extra_css %}{% endblock %}
 </head>
 <body>
 
+<!-- Floating Social Media Bar -->
+<div class="social-float-bar">
+  <a href="{% if site_settings and site_settings.facebook_url %}{{ site_settings.facebook_url }}{% else %}https://www.facebook.com/ChaitanyaPamgarh/?ref=embed_page#{% endif %}" target="_blank" rel="noopener noreferrer" class="social-float-link facebook">
+    <i class="fa-brands fa-facebook-f"></i>
+  </a>
+  <a href="{% if site_settings and site_settings.youtube_url %}{{ site_settings.youtube_url }}{% else %}https://www.youtube.com/@ChaitanyaCollegePamgarh{% endif %}" target="_blank" rel="noopener noreferrer" class="social-float-link youtube">
+    <i class="fa-brands fa-youtube"></i>
+  </a>
+  <a href="{% if site_settings and site_settings.instagram_url %}{{ site_settings.instagram_url }}{% else %}https://www.instagram.com/{% endif %}" target="_blank" rel="noopener noreferrer" class="social-float-link instagram">
+    <i class="fa-brands fa-instagram"></i>
+  </a>
+</div>
+
 <!-- College Header Bar -->
+{% if site_settings and site_settings.use_image_header and site_settings.header_image %}
+<div class="navbar-top-image" style="width: 100%; text-align: center; background-color: #f8f9fa; padding: 0;">
+  <a href="{% url 'core:home' %}" style="display: block; width: 100%;">
+    <img alt="Header Banner" src="{{ site_settings.header_image.url }}" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto;"/>
+  </a>
+</div>
+{% else %}
 <div class="navbar-top">
   <div class="logo">
     <img alt="Logo" src="{% if site_settings %}{{ site_settings.get_college_logo }}{% else %}{% static 'assets/csac_pmg.svg' %}{% endif %}"/>
@@ -116,6 +196,7 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
     <img alt="Logo 3" src="{% if site_settings %}{{ site_settings.get_logo5 }}{% else %}{% static 'assets/images/logo_4.png' %}{% endif %}"/>
   </div>
 </div>
+{% endif %}
 
 <!-- Main Navigation -->
 <header class="header v__5 header__sticky" style="background-color:#E61013;color:white">

@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
@@ -65,45 +65,66 @@
         <div class="row mb-5">
             <div class="col-12">
                 <h3 class="fw-bold mb-4" style="color: #E61013;"><i class="fas fa-list-ol me-2"></i> NAAC Assessment Criteria (SSR Documents)</h3>
-                {% if criteria %}
-                <div class="table-responsive shadow-sm border bg-white rounded">
-                    <table class="table table-bordered table-hover align-middle mb-0">
-                        <thead class="table-danger text-dark">
-                            <tr>
-                                <th class="text-center" style="width: 100px;">Criterion</th>
-                                <th>Focus Area / Description</th>
-                                <th class="text-center" style="width: 160px;">Criterion Document</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for criterion in criteria %}
-                            <tr>
-                                <td class="text-center fw-bold text-danger">Criterion {{ criterion.criterion_number }}</td>
-                                <td>
-                                    <h6 class="fw-bold mb-1 text-dark">{{ criterion.title }}</h6>
-                                    <p class="text-muted small mb-0">{{ criterion.description }}</p>
-                                </td>
-                                <td class="text-center">
-                                    {% if criterion.document %}
-                                        <a href="{{ criterion.document.url }}" class="btn btn-sm btn-danger px-3" download>
-                                            <i class="fas fa-download me-1"></i> Download
-                                        </a>
-                                    {% elif criterion.document_url %}
-                                        <a href="{{ criterion.document_url }}" class="btn btn-sm btn-outline-danger px-3" target="_blank">
-                                            <i class="fas fa-external-link-alt me-1"></i> View URL
-                                        </a>
-                                    {% else %}
-                                        <span class="text-muted small">Pending Upload</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                
+                <div class="accordion shadow-sm" id="naacAccordion">
+                    {% for group in criteria_groups %}
+                    <div class="accordion-item border mb-3 rounded overflow-hidden" style="border-radius: 8px !important;">
+                        <h2 class="accordion-header" id="heading{{ group.id }}">
+                            <button class="accordion-button collapsed fw-bold text-dark fs-5 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ group.id }}" aria-expanded="false" aria-controls="collapse{{ group.id }}" style="background-color: #f8f9fa;">
+                                <i class="fas fa-folder text-danger me-3"></i> {{ group.name }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ group.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ group.id }}" data-bs-parent="#naacAccordion">
+                            <div class="accordion-body p-0 bg-white">
+                                {% if group.metrics %}
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover align-middle mb-0">
+                                        <thead class="table-light text-dark">
+                                            <tr>
+                                                <th class="text-center" style="width: 120px;">Metric No.</th>
+                                                <th>Metric Description</th>
+                                                <th class="text-center" style="width: 180px;">Criterion Document</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for metric in group.metrics %}
+                                            <tr>
+                                                <td class="text-center fw-bold text-danger">{{ metric.criterion_number }}</td>
+                                                <td>
+                                                    <h6 class="fw-bold mb-1 text-dark">{{ metric.title }}</h6>
+                                                    {% if metric.description %}
+                                                        <p class="text-muted small mb-0">{{ metric.description }}</p>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="text-center">
+                                                    {% if metric.document %}
+                                                        <a href="{{ metric.document.url }}" class="btn btn-sm btn-danger px-3" download>
+                                                            <i class="fas fa-download me-1"></i> Download
+                                                        </a>
+                                                    {% elif metric.document_url %}
+                                                        <a href="{{ metric.document_url }}" class="btn btn-sm btn-outline-danger px-3" target="_blank">
+                                                            <i class="fas fa-external-link-alt me-1"></i> View URL
+                                                        </a>
+                                                    {% else %}
+                                                        <button class="btn btn-sm btn-outline-danger px-3" disabled style="pointer-events: none; opacity: 0.65;">
+                                                            <i class="fas fa-eye me-1"></i> View
+                                                        </button>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <div class="p-3 text-muted">No metrics registered under this criterion.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% else %}
-                <div class="alert alert-secondary border-0 shadow-sm">No specific criteria information is registered in the database.</div>
-                {% endif %}
+
             </div>
         </div>
 

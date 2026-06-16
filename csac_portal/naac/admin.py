@@ -19,8 +19,10 @@ class IQACMemberAdmin(admin.ModelAdmin):
 
 @admin.register(NAACCriteria)
 class NAACCriteriaAdmin(admin.ModelAdmin):
-    list_display = ('criterion_number', 'title', 'order')
+    list_display = ('criterion', 'criterion_number', 'title', 'order')
+    list_filter = ('criterion',)
     list_editable = ('order',)
+    fields = ('criterion', 'criterion_number', 'title', 'description', 'document', 'document_url', 'order')
 
 
 @admin.register(NAACInfo)

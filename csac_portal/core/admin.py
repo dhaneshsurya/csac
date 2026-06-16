@@ -59,6 +59,12 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             )
         }),
         ('Branding & Logos', {'fields': ('college_logo', 'college_logo_mobile', 'logo2', 'logo3', 'logo4', 'logo5')}),
+        ('Header Layout Settings', {
+            'fields': (
+                'use_image_header',
+                'header_image',
+            )
+        }),
         ('Contact Settings', {
             'fields': (
                 'address_line1',
