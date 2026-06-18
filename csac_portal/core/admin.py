@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import (
-    SiteSettings, MarqueeNotice, BannerSlide, AccreditationLogo,
+    SiteSettings, BannerSlide, AccreditationLogo,
     StatCounter, CollegeInfo, Leadership, Committee, CommitteeMember,
     Policy, Achievement, Notice, ImportantLink, CareerGuidanceSubmission,
     SocialScheme, Testimonial, Event, Happening, HappeningImage, QuickLinkCard,
@@ -81,13 +81,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ('Other', {'fields': ('established_year',)}),
     )
 
-
-@admin.register(MarqueeNotice)
-class MarqueeNoticeAdmin(admin.ModelAdmin):
-    list_display = ('text', 'is_active', 'order', 'created_at')
-    list_filter = ('is_active',)
-    list_editable = ('is_active', 'order')
-    search_fields = ('text',)
 
 
 @admin.register(BannerSlide)

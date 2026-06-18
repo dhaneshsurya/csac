@@ -103,21 +103,6 @@ class SiteSettings(models.Model):
         return static('assets/csac_mobile.svg')
 
 
-class MarqueeNotice(models.Model):
-    text = models.CharField(max_length=300)
-    link = models.URLField(blank=True)
-    is_active = models.BooleanField(default=True)
-    order = models.PositiveIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['order', '-created_at']
-        verbose_name = "Marquee Notice"
-
-    def __str__(self):
-        return self.text[:80]
-
-
 class BannerSlide(models.Model):
     caption = models.CharField(max_length=300)
     image = models.ImageField(upload_to='banner/', blank=True)

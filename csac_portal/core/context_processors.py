@@ -1,4 +1,4 @@
-from .models import SiteSettings, MarqueeNotice, ImportantLink, Notice
+from .models import SiteSettings, ImportantLink, Notice
 from .models import BreadcrumbSettings, PageBreadcrumb, MenuItem
 
 
@@ -9,37 +9,17 @@ def site_context(request):
     except Exception:
         settings_obj = None
 
-    # Retrieve standard marquee notices
-    mn_list = MarqueeNotice.objects.filter(is_active=True)
-
     # Retrieve uploaded notices set to show in marquee
     n_list = Notice.objects.filter(show_in_marquee=True, is_active=True).order_by('-published_date')
 
-    # Build unified marquee notices list without duplicates
+    # Build marquee notices list
     combined_marquee = []
-    seen = set()
-
-    # Process Notice objects first (since they contain more metadata/flags)
     for n in n_list:
-        normalized_text = n.title.strip().lower()
-        seen.add(normalized_text)
         link = n.document.url if n.document else n.document_url
         combined_marquee.append({
             'text': n.title,
             'link': link,
             'flag': n.marquee_flag,
-        })
-
-    # Process MarqueeNotice objects second, skipping duplicates
-    for mn in mn_list:
-        normalized_text = mn.text.strip().lower()
-        if normalized_text in seen:
-            continue
-        seen.add(normalized_text)
-        combined_marquee.append({
-            'text': mn.text,
-            'link': mn.link,
-            'flag': None,
         })
 
     important_links = ImportantLink.objects.filter(category='important')
