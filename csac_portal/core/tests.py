@@ -52,7 +52,7 @@ class HappeningsTests(TestCase):
         response = self.client.get(reverse('core:happenings') + "?q=NonExistent")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['page_obj']), 0)
-        self.assertContains(response, "No happenings found.")
+        self.assertContains(response, "No happenings found matching your filters.")
 
     def test_happening_detail_view_success(self):
         h = Happening.objects.create(
