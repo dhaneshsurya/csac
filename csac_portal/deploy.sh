@@ -11,11 +11,11 @@ echo "======================================"
 echo "1. Pulling latest updates from GitHub..."
 git pull origin main
 
-# 2. Activate virtual environment (uncomment and adjust if using a venv)
-# if [ -d "venv" ]; then
-#     echo "Activating virtual environment..."
-#     source venv/bin/activate
-# fi
+# 2. Activate virtual environment if using a venv
+if [ -d "venv" ]; then
+    echo "Activating virtual environment..."
+    source venv/bin/activate
+fi
 
 # 3. Install dependencies
 echo "2. Installing dependencies from requirements.txt..."
