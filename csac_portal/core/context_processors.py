@@ -93,7 +93,7 @@ def site_context(request):
         'academics_programs', 'academics_calendar', 'academics_dept_detail',
         'students_admission', 'students_online_admission', 'students_fee_structure',
         'students_scholarship', 'students_library', 'students_alumni',
-        'students_merit_list',
+        'students_merit_list', 'students_syllabus',
         'naac_home', 'naac_iqac', 'naac_iiqa', 'naac_ssr', 'naac_dvv', 'naac_atr',
         'gallery_images', 'gallery_videos', 'gallery_news',
         'feedback_student', 'feedback_parent', 'feedback_faculty', 'feedback_alumni',

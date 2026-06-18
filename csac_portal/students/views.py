@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import AdmissionInfo, FeeStructure, Scholarship, AlumniProfile, MeritListEntry, LibraryResource, LibraryInfo, MeritListPageSettings, FeeStructurePageSettings
+from academics.models import Syllabus
 from .forms import OnlineAdmissionForm
 
 
@@ -95,3 +96,13 @@ def merit_list(request):
         'breadcrumb': 'University Merit List',
     }
     return render(request, 'students/merit_list.html', context)
+
+
+def syllabus(request):
+    syllabi = Syllabus.objects.select_related('department', 'program').all()
+    context = {
+        'syllabi': syllabi,
+        'page_title': 'Syllabus',
+        'breadcrumb': 'Syllabus',
+    }
+    return render(request, 'students/syllabus.html', context)

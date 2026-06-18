@@ -128,16 +128,24 @@ class Syllabus(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='syllabi')
     program = models.ForeignKey(Program, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=200)
-    document = models.FileField(upload_to='syllabus/')
+    document = models.FileField(upload_to='syllabus/', blank=True)
+    document_url = models.URLField(blank=True, help_text="External URL for the syllabus document (used if no local file is uploaded)")
     academic_year = models.CharField(max_length=10, blank=True)
+    order = models.PositiveIntegerField(default=0)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-uploaded_at']
+        ordering = ['order', '-uploaded_at']
         verbose_name_plural = "Syllabi"
 
     def __str__(self):
         return self.title
+
+    def get_document(self):
+        """Return local file URL if uploaded, otherwise the external URL."""
+        if self.document:
+            return self.document.url
+        return self.document_url
 
 
 class AcademicCalendar(models.Model):

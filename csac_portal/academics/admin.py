@@ -72,8 +72,10 @@ class COPOMappingAdmin(admin.ModelAdmin):
 
 @admin.register(Syllabus)
 class SyllabusAdmin(admin.ModelAdmin):
-    list_display = ('title', 'department', 'program', 'academic_year', 'uploaded_at')
+    list_display = ('title', 'department', 'program', 'academic_year', 'order', 'uploaded_at')
     list_filter = ('department', 'academic_year')
+    list_editable = ('order',)
+    search_fields = ('title',)
 
 
 @admin.register(AcademicCalendar)

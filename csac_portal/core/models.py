@@ -827,6 +827,7 @@ class PageBreadcrumb(models.Model):
         ('students_library',         'Library'),
         ('students_alumni',          'Alumni'),
         ('students_merit_list',      'Merit List'),
+        ('students_syllabus',        'Syllabus'),
         # NAAC
         ('naac_home',                'NAAC'),
         ('naac_iqac',                'IQAC'),
