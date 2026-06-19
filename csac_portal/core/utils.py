@@ -43,6 +43,37 @@ class NavbarMenuItem:
         return self._menu_item.get_absolute_url()
 
 
+def sync_facilities_menu_item():
+    """Ensure the top-level Facilities navbar item exists on every environment."""
+    from .models import MenuItem
+
+    facilities, created = MenuItem.objects.get_or_create(
+        title='Facilities',
+        parent=None,
+        defaults={
+            'url': 'core:infrastructure',
+            'is_named_url': True,
+            'open_in_new_tab': False,
+            'order': 6,
+            'is_active': True,
+        },
+    )
+
+    if not created:
+        updates = {}
+        if facilities.url != 'core:infrastructure' or not facilities.is_named_url:
+            updates['url'] = 'core:infrastructure'
+            updates['is_named_url'] = True
+        if not facilities.is_active:
+            updates['is_active'] = True
+        if updates:
+            for field, value in updates.items():
+                setattr(facilities, field, value)
+            facilities.save(update_fields=list(updates.keys()))
+
+    return facilities
+
+
 def get_navbar_menu():
     from django.urls import reverse
 
@@ -151,6 +182,8 @@ def seed_default_menu_items():
             ("Faculty's Feedback", "feedback:faculty_feedback", True, False, 3, []),
             ("Alumni's Feedback", "feedback:alumni_feedback", True, False, 4, [])
         ]),
+
+        ("Facilities", "core:infrastructure", True, False, 6, []),
         
         ("Grievances", "#", False, False, 7, [
             ("Anti Ragging Committee", "grievances:anti_ragging", True, False, 1, []),
