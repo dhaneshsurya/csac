@@ -24,6 +24,7 @@ urlpatterns = [
     path('happenings/<int:pk>/', views.happening_detail, name='happening_detail'),
     path('events/<int:pk>/', views.event_detail, name='event_detail'),
     path('infrastructure/', views.infrastructure, name='infrastructure'),
+    path('infrastructure/<slug:slug>/', views.infrastructure_detail, name='infrastructure_detail'),
     path('products/', views.products, name='products'),
     path('products/<slug:slug>/', views.product_detail, name='product_detail'),
     path('students/library/', views.library, name='library'),

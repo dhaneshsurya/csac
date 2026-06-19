@@ -1,0 +1,521 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  .infra-detail-section {
+    padding: 60px 0 90px;
+    background: #f9fafb;
+  }
+
+  .infra-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 24px;
+    transition: color 0.2s ease;
+  }
+  .infra-back-link:hover {
+    color: #B71A34;
+  }
+
+  .infra-hero-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    padding: 36px;
+    margin-bottom: 32px;
+  }
+
+  .infra-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(183, 26, 52, 0.08);
+    border: 1px solid rgba(183, 26, 52, 0.18);
+    color: #B71A34;
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .infra-hero-title {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 16px;
+    line-height: 1.25;
+  }
+
+  .infra-hero-desc {
+    color: #4b5563;
+    font-size: 16px;
+    line-height: 1.75;
+    margin-bottom: 0;
+    white-space: pre-line;
+    text-align: justify;
+  }
+
+  .infra-stat-pill {
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px 18px;
+    text-align: center;
+  }
+  .infra-stat-pill strong {
+    display: block;
+    font-size: 1.5rem;
+    color: #B71A34;
+    line-height: 1.1;
+  }
+  .infra-stat-pill span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .infra-sidebar {
+    position: sticky;
+    top: 100px;
+  }
+  .infra-sidebar-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+  }
+  .infra-sidebar-header {
+    background: #B71A34;
+    color: #ffffff;
+    padding: 18px 20px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .infra-sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 20px;
+    color: #374151;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+  }
+  .infra-sidebar-link:last-child {
+    border-bottom: none;
+  }
+  .infra-sidebar-link:hover,
+  .infra-sidebar-link.active {
+    background: rgba(183, 26, 52, 0.06);
+    color: #B71A34;
+    padding-left: 24px;
+  }
+
+  .infra-subsection {
+    background: #ffffff;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+    padding: 28px;
+    margin-bottom: 28px;
+    scroll-margin-top: 110px;
+  }
+  .infra-subsection-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 10px;
+    position: relative;
+    padding-bottom: 10px;
+  }
+  .infra-subsection-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 42px;
+    height: 3px;
+    background: #B71A34;
+    border-radius: 2px;
+  }
+  .infra-subsection-desc {
+    color: #4b5563;
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 22px;
+    text-align: justify;
+  }
+
+  .infra-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+  }
+  .infra-gallery-item {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: #f3f4f6;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  }
+  .infra-gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+  }
+  .infra-gallery-item:hover img {
+    transform: scale(1.05);
+  }
+  .infra-gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.35);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.25s ease;
+  }
+  .infra-gallery-item:hover .infra-gallery-overlay {
+    opacity: 1;
+  }
+  .infra-gallery-zoom {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #B71A34;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+  }
+
+  .infra-video-card {
+    background: #111827;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .infra-video-card iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    display: block;
+  }
+
+  .infra-related-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 18px;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s ease;
+    display: block;
+  }
+  .infra-related-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    border-color: rgba(183, 26, 52, 0.25);
+  }
+  .infra-related-card h6 {
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+  .infra-related-card p {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 0;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 991px) {
+    .infra-sidebar {
+      position: static;
+      margin-bottom: 24px;
+    }
+    .infra-hero-card {
+      padding: 24px;
+    }
+    .infra-subsection {
+      padding: 20px;
+    }
+  }
+
+  /* Infrastructure lightbox — 80% viewport preview */
+  .mfp-wrap.mfp-infra-lightbox .mfp-container {
+    padding: 0 10vw 80px;
+  }
+  .mfp-infra-lightbox .mfp-image-holder .mfp-content {
+    max-width: 80vw !important;
+    width: 80vw !important;
+    height: auto;
+  }
+  .mfp-infra-lightbox img.mfp-img {
+    max-width: 80vw !important;
+    max-height: 80vh !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 12px 0;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+  .mfp-infra-lightbox .mfp-figure:after {
+    top: 12px;
+    bottom: 12px;
+  }
+  .mfp-infra-lightbox .mfp-figure figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+  }
+  .mfp-wrap.mfp-infra-lightbox .mfp-bottom-bar {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    margin-top: 0;
+    width: auto;
+    max-width: min(88vw, 720px);
+    z-index: 1047;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(17, 24, 39, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 50px;
+    padding: 12px 32px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  }
+  .mfp-wrap.mfp-infra-lightbox .mfp-title {
+    text-align: center !important;
+    width: auto;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: #ffffff;
+    letter-spacing: 0.2px;
+  }
+  .mfp-wrap.mfp-infra-lightbox .mfp-counter {
+    position: static;
+    text-align: center;
+    width: auto;
+    margin-top: 3px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+  }
+  @media (max-width: 768px) {
+    .mfp-wrap.mfp-infra-lightbox .mfp-container {
+      padding: 0 4vw 72px;
+    }
+    .mfp-wrap.mfp-infra-lightbox .mfp-bottom-bar {
+      bottom: 18px;
+      padding: 10px 22px;
+      max-width: 92vw;
+    }
+    .mfp-infra-lightbox .mfp-image-holder .mfp-content {
+      max-width: 92vw !important;
+      width: 92vw !important;
+    }
+    .mfp-infra-lightbox img.mfp-img {
+      max-width: 92vw !important;
+      max-height: 75vh !important;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="rts-breadcrumb breadcrumb-height breadcumb-bg" style="{% with bcimg=breadcrumb_images.infrastructure %}{% if bcimg %}background-image: url('{{ bcimg }}');{% endif %}{% endwith %}">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="breadcrumb-content">
+          <h2 class="section-title">{{ breadcrumb }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="infra-detail-section">
+  <div class="container">
+    <a href="{% url 'core:infrastructure' %}" class="infra-back-link">
+      <i class="fa-solid fa-arrow-left"></i>
+      Back to Campus Infrastructure
+    </a>
+
+    <div class="infra-hero-card">
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-8">
+          <span class="infra-hero-badge">
+            <i class="fa-solid fa-building-columns"></i>
+            Infrastructure Category
+          </span>
+          <h1 class="infra-hero-title">{{ infrastructure_item.title }}</h1>
+          <p class="infra-hero-desc">{{ infrastructure_item.description }}</p>
+        </div>
+        <div class="col-lg-4">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="infra-stat-pill">
+                <strong>{{ subcategory_count }}</strong>
+                <span>Subcategories</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="infra-stat-pill">
+                <strong>{{ image_count }}</strong>
+                <span>Photos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-3">
+        <div class="infra-sidebar">
+          <div class="infra-sidebar-card">
+            <div class="infra-sidebar-header">Browse Subcategories</div>
+            {% for group in image_groups %}
+              <a href="#infra-sub-{{ forloop.counter }}" class="infra-sidebar-link infra-nav-link">
+                <span>{{ group.caption }}</span>
+                <i class="fa-solid fa-chevron-right" style="font-size: 11px; opacity: 0.6;"></i>
+              </a>
+            {% empty %}
+              <div class="p-3 text-muted small">No gallery sections available yet.</div>
+            {% endfor %}
+          </div>
+
+          {% if infrastructure_item.get_video_embed_url %}
+            <div class="infra-video-card mt-4">
+              <iframe
+                src="{{ infrastructure_item.get_video_embed_url }}"
+                title="{{ infrastructure_item.title }} video tour"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-lg-9">
+        {% for group in image_groups %}
+          <article class="infra-subsection" id="infra-sub-{{ forloop.counter }}">
+            <h2 class="infra-subsection-title">{{ group.caption }}</h2>
+            {% if group.description %}
+              <p class="infra-subsection-desc">{{ group.description }}</p>
+            {% else %}
+              <p class="infra-subsection-desc">
+                A dedicated space within {{ infrastructure_item.title }}, designed to support practical learning,
+                research activities, and hands-on academic training under expert supervision.
+              </p>
+            {% endif %}
+
+            <div class="infra-gallery-grid infra-gallery-group-{{ forloop.counter }}">
+              {% for image in group.images %}
+                <div class="infra-gallery-item">
+                  <img src="{{ image.get_image }}" alt="{{ group.caption }}" loading="lazy">
+                  <a
+                    href="{{ image.get_image }}"
+                    class="infra-gallery-overlay infra-lightbox-{{ forloop.parentloop.counter }}"
+                    title="{{ group.caption }}"
+                  >
+                    <span class="infra-gallery-zoom">
+                      <i class="fa-solid fa-magnifying-glass-plus"></i>
+                    </span>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </article>
+        {% empty %}
+          <div class="infra-subsection text-center py-5">
+            <h4 class="text-muted mb-2">No images have been added for this facility yet.</h4>
+            <p class="text-muted mb-0">Please check back soon for updated gallery content.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if related_infrastructure %}
+      <div class="mt-5 pt-2">
+        <h3 class="fw-bold mb-4" style="color: #111827;">Explore More Facilities</h3>
+        <div class="row g-3">
+          {% for item in related_infrastructure %}
+            <div class="col-md-6 col-lg-4">
+              <a href="{% url 'core:infrastructure_detail' item.slug %}" class="infra-related-card">
+                <h6>{{ item.title }}</h6>
+                <p>{{ item.description|truncatechars:110 }}</p>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  $(document).ready(function() {
+    $('.infra-nav-link').on('click', function(e) {
+      if (this.hash) {
+        e.preventDefault();
+        $('html, body').animate({
+          scrollTop: $(this.hash).offset().top - 100
+        }, 700);
+      }
+    });
+
+    if (typeof $.fn.magnificPopup !== 'undefined') {
+      {% for group in image_groups %}
+        $('.infra-lightbox-{{ forloop.counter }}').magnificPopup({
+          type: 'image',
+          gallery: { enabled: true },
+          closeOnContentClick: true,
+          mainClass: 'mfp-infra-lightbox',
+          image: {
+            verticalFit: false,
+            titleSrc: 'title'
+          }
+        });
+      {% endfor %}
+    }
+  });
+</script>
+{% endblock %}

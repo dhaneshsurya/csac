@@ -152,6 +152,27 @@
     position: relative;
     padding-bottom: 8px;
   }
+  .infra-card-title-link {
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.25s ease;
+  }
+  .infra-card-title-link:hover {
+    color: #B71A34;
+  }
+  .infra-card-title-link .infra-title-arrow {
+    font-size: 12px;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all 0.25s ease;
+  }
+  .infra-card-title-link:hover .infra-title-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
   .infra-card-title::after {
     content: '';
     position: absolute;
@@ -161,6 +182,31 @@
     height: 3px;
     background: #B71A34;
     border-radius: 2px;
+    transition: width 0.25s ease;
+  }
+  .infra-card-title-link:hover::after {
+    width: 55px;
+  }
+  .infra-view-gallery-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: rgba(183, 26, 52, 0.08);
+    border: 1px solid rgba(183, 26, 52, 0.18);
+    color: #B71A34;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+  .infra-view-gallery-btn:hover {
+    background: #B71A34;
+    color: #ffffff;
+    border-color: #B71A34;
+    box-shadow: 0 4px 12px rgba(183, 26, 52, 0.25);
   }
   
   .infra-card-desc {
@@ -214,6 +260,95 @@
     }
     .infra-slide-img {
       height: 200px;
+    }
+  }
+
+  /* Infrastructure lightbox — 80% viewport preview */
+  .mfp-wrap.mfp-infra-lightbox .mfp-container {
+    padding: 0 10vw 80px;
+  }
+  .mfp-infra-lightbox .mfp-image-holder .mfp-content {
+    max-width: 80vw !important;
+    width: 80vw !important;
+    height: auto;
+  }
+  .mfp-infra-lightbox img.mfp-img {
+    max-width: 80vw !important;
+    max-height: 80vh !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 12px 0;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+  .mfp-infra-lightbox .mfp-figure:after {
+    top: 12px;
+    bottom: 12px;
+  }
+  .mfp-infra-lightbox .mfp-figure figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+  }
+  .mfp-wrap.mfp-infra-lightbox .mfp-bottom-bar {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    margin-top: 0;
+    width: auto;
+    max-width: min(88vw, 720px);
+    z-index: 1047;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(17, 24, 39, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 50px;
+    padding: 12px 32px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  }
+  .mfp-wrap.mfp-infra-lightbox .mfp-title {
+    text-align: center !important;
+    width: auto;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: #ffffff;
+    letter-spacing: 0.2px;
+  }
+  .mfp-wrap.mfp-infra-lightbox .mfp-counter {
+    position: static;
+    text-align: center;
+    width: auto;
+    margin-top: 3px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+  }
+  @media (max-width: 768px) {
+    .mfp-wrap.mfp-infra-lightbox .mfp-container {
+      padding: 0 4vw 72px;
+    }
+    .mfp-wrap.mfp-infra-lightbox .mfp-bottom-bar {
+      bottom: 18px;
+      padding: 10px 22px;
+      max-width: 92vw;
+    }
+    .mfp-infra-lightbox .mfp-image-holder .mfp-content {
+      max-width: 92vw !important;
+      width: 92vw !important;
+    }
+    .mfp-infra-lightbox img.mfp-img {
+      max-width: 92vw !important;
+      max-height: 75vh !important;
     }
   }
 </style>
@@ -329,8 +464,17 @@
             
             <!-- Bottom Column: Text Details -->
             <div class="d-flex flex-column flex-grow-1">
-              <h4 class="infra-card-title">{{ item.title }}</h4>
+              <h4 class="infra-card-title">
+                <a href="{% url 'core:infrastructure_detail' item.slug %}" class="infra-card-title-link">
+                  {{ item.title }}
+                  <i class="fa-solid fa-arrow-right infra-title-arrow"></i>
+                </a>
+              </h4>
               <p class="infra-card-desc flex-grow-1" style="white-space: pre-line;">{{ item.description }}</p>
+              <a href="{% url 'core:infrastructure_detail' item.slug %}" class="infra-view-gallery-btn">
+                <i class="fa-solid fa-images"></i>
+                View Full Gallery
+              </a>
               
               {% if item.video_url %}
                 <div class="mt-4 pt-3 border-top">
@@ -400,9 +544,10 @@
               enabled: true
             },
             closeOnContentClick: true,
-            mainClass: 'mfp-img-mobile',
+            mainClass: 'mfp-infra-lightbox',
             image: {
-              verticalFit: true
+              verticalFit: false,
+              titleSrc: 'title'
             }
           });
         }
@@ -414,9 +559,10 @@
       $('.single-popup').magnificPopup({
         type: 'image',
         closeOnContentClick: true,
-        mainClass: 'mfp-img-mobile',
+        mainClass: 'mfp-infra-lightbox',
         image: {
-          verticalFit: true
+          verticalFit: false,
+          titleSrc: 'title'
         }
       });
     }

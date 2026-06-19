@@ -1112,7 +1112,11 @@ class InfrastructureImage(models.Model):
     infrastructure = models.ForeignKey(Infrastructure, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='infrastructure/', blank=True, null=True, help_text="Upload local image")
     image_url = models.URLField(blank=True, help_text="Or enter external image URL")
-    caption = models.CharField(max_length=250, blank=True, help_text="Optional caption for the image")
+    caption = models.CharField(max_length=250, blank=True, help_text="Subcategory or facility name shown on the detail page")
+    description = models.TextField(
+        blank=True,
+        help_text="Optional description for this subcategory or image section on the detail page",
+    )
     order = models.PositiveIntegerField(default=0)
 
     class Meta:

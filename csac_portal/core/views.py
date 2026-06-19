@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from collections import OrderedDict
+
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.db import models
 from .models import (
@@ -582,6 +584,48 @@ def infrastructure(request):
         'breadcrumb': 'Infrastructure',
     }
     return render(request, 'core/infrastructure.html', context)
+
+
+def _group_infrastructure_images(images):
+    """Group infrastructure images by caption/subcategory for the detail page."""
+    groups = OrderedDict()
+    for image in images:
+        label = image.caption.strip() if image.caption else 'Facility Gallery'
+        if label not in groups:
+            groups[label] = {
+                'caption': label,
+                'description': image.description.strip() if image.description else '',
+                'images': [],
+            }
+        groups[label]['images'].append(image)
+        if image.description and not groups[label]['description']:
+            groups[label]['description'] = image.description.strip()
+    return list(groups.values())
+
+
+def infrastructure_detail(request, slug):
+    infrastructure_item = get_object_or_404(
+        Infrastructure.objects.prefetch_related('images'),
+        slug=slug,
+        is_active=True,
+    )
+    image_groups = _group_infrastructure_images(infrastructure_item.images.all())
+    related_infrastructure = (
+        Infrastructure.objects.filter(is_active=True)
+        .exclude(pk=infrastructure_item.pk)
+        .order_by('order', 'title')[:6]
+    )
+
+    context = {
+        'infrastructure_item': infrastructure_item,
+        'image_groups': image_groups,
+        'image_count': infrastructure_item.images.count(),
+        'subcategory_count': len(image_groups),
+        'related_infrastructure': related_infrastructure,
+        'page_title': infrastructure_item.title,
+        'breadcrumb': infrastructure_item.title,
+    }
+    return render(request, 'core/infrastructure_detail.html', context)
 
 
 def products(request):

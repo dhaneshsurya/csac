@@ -568,7 +568,7 @@ class InfrastructureImageInline(admin.TabularInline):
     model = InfrastructureImage
     form = InfrastructureImageForm
     extra = 1
-    fields = ('image', 'image_url', 'caption', 'order')
+    fields = ('image', 'image_url', 'caption', 'description', 'order')
 
 
 @admin.register(Infrastructure)
