@@ -1093,6 +1093,10 @@ class Infrastructure(models.Model):
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('core:infrastructure_detail', args=[self.slug])
+
     def get_youtube_video_id(self):
         if not self.video_url:
             return None

@@ -15378,9 +15378,9 @@ xclip
 }
 
 .navigation__menu ul {
-    display: flex;
+    /* display: flex; */
     max-width: max-content;
-    gap: 20px;
+    gap: 10px;
     position: relative;
     padding: 0;
     margin: 0;

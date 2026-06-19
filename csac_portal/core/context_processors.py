@@ -1,5 +1,5 @@
 from .models import SiteSettings, ImportantLink, Notice
-from .models import BreadcrumbSettings, PageBreadcrumb, MenuItem
+from .models import BreadcrumbSettings, PageBreadcrumb
 
 
 def site_context(request):
@@ -83,9 +83,9 @@ def site_context(request):
     breadcrumb_images = {k: _resolve(k) for k in _all_keys}
 
     try:
-        from .utils import seed_default_menu_items
+        from .utils import get_navbar_menu, seed_default_menu_items
         seed_default_menu_items()
-        navbar_menu = MenuItem.objects.filter(parent=None, is_active=True).prefetch_related('children', 'children__children')
+        navbar_menu = get_navbar_menu()
     except Exception:
         navbar_menu = []
 

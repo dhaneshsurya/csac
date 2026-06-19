@@ -1,5 +1,81 @@
 from django.db import transaction
 
+
+class _MenuChildren:
+    def __init__(self, items):
+        self._items = items
+
+    def all(self):
+        return self._items
+
+
+class DynamicNavbarChild:
+    """Navbar submenu item generated from Infrastructure records."""
+
+    def __init__(self, title, url, open_in_new_tab=False):
+        self.title = title
+        self.url = url
+        self.open_in_new_tab = open_in_new_tab
+        self.is_named_url = False
+        self.children = _MenuChildren([])
+
+    def get_absolute_url(self):
+        return self.url
+
+
+class NavbarMenuItem:
+    """Wraps a MenuItem and optionally injects dynamic submenu children."""
+
+    def __init__(self, menu_item, children_override=None):
+        self._menu_item = menu_item
+        self._children_override = children_override
+
+    def __getattr__(self, name):
+        return getattr(self._menu_item, name)
+
+    @property
+    def children(self):
+        if self._children_override is not None:
+            return self._children_override
+        return self._menu_item.children
+
+    def get_absolute_url(self):
+        return self._menu_item.get_absolute_url()
+
+
+def get_navbar_menu():
+    from django.urls import reverse
+
+    from .models import Infrastructure, MenuItem
+
+    menu_items = MenuItem.objects.filter(
+        parent=None,
+        is_active=True,
+    ).prefetch_related('children', 'children__children')
+
+    infrastructure_items = list(
+        Infrastructure.objects.filter(is_active=True).order_by('order', 'title')
+    )
+
+    navbar_menu = []
+    for menu in menu_items:
+        if menu.title.strip().lower() == 'facilities' and infrastructure_items:
+            dynamic_children = [
+                DynamicNavbarChild(
+                    title=infra.title,
+                    url=infra.get_absolute_url(),
+                )
+                for infra in infrastructure_items
+            ]
+            navbar_menu.append(
+                NavbarMenuItem(menu, children_override=_MenuChildren(dynamic_children))
+            )
+        else:
+            navbar_menu.append(NavbarMenuItem(menu))
+
+    return navbar_menu
+
+
 def seed_default_menu_items():
     from .models import MenuItem
 
