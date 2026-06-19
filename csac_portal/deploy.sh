@@ -9,6 +9,18 @@ echo "======================================"
 
 # 1. Pull latest code from GitHub
 echo "1. Pulling latest updates from GitHub..."
+
+# Remove untracked files that would block pull (e.g. media uploaded via admin)
+git fetch origin main
+while IFS= read -r file; do
+    if [ -n "$file" ] && [ -f "$file" ] && ! git ls-files --error-unmatch "$file" >/dev/null 2>&1; then
+        if git cat-file -e "origin/main:$file" 2>/dev/null; then
+            echo "Removing untracked file that would be overwritten: $file"
+            rm -f "$file"
+        fi
+    fi
+done < <(git diff --name-only HEAD origin/main 2>/dev/null || true)
+
 git pull origin main
 
 # 2. Activate virtual environment if using a venv
