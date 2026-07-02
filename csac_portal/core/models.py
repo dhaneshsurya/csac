@@ -182,6 +182,7 @@ class Leadership(models.Model):
     name = models.CharField(max_length=150)
     role = models.CharField(max_length=30, choices=ROLE_CHOICES)
     qualification = models.CharField(max_length=200, blank=True)
+    email = models.EmailField(blank=True, help_text="Email address shown on the home and about pages")
     photo = models.ImageField(upload_to='leadership/', blank=True)
     message = models.TextField(blank=True)
     order = models.PositiveIntegerField(default=0)
@@ -191,6 +192,13 @@ class Leadership(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_role_display()})"
+
+    def get_photo_url(self):
+        if self.photo:
+            return self.photo.url
+        if self.role == 'principal':
+            return 'https://chaitanyafiles01.s3.amazonaws.com/aboutImages/vkgupta.png'
+        return 'https://chaitanyafiles01.s3.amazonaws.com/directorImages/DSC_0086.JPG'
 
 
 class Committee(models.Model):

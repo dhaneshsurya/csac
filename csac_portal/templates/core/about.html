@@ -83,39 +83,17 @@
         color: #E61013;
         font-size: 14px;
     }
-    .testimonial-section-custom {
+    .leadership-section-custom {
         background: #fff;
         padding: 60px 0;
         border-top: 1px solid #eee;
     }
-    .testimonial-box-custom {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-        background: #f8f9fa;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.03);
-    }
-    .testimonial-img-custom {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid #E61013;
-        flex-shrink: 0;
-    }
-    .testimonial-text-custom {
-        font-size: 16px;
-        line-height: 1.8;
-        color: #555;
-        font-style: italic;
-    }
-    .testimonial-author-custom {
-        font-size: 18px;
+    .leadership-section-title {
+        font-size: 28px;
         font-weight: 700;
-        color: #333;
-        margin-top: 15px;
+        color: #111827;
+        margin-bottom: 28px;
+        text-align: center;
     }
 </style>
 
@@ -287,19 +265,33 @@
     </div>
 </section>
 
-<!-- Testimonial Section -->
-<section class="testimonial-section-custom">
+<!-- Leadership Messages Section -->
+<section class="leadership-section-custom">
     <div class="container">
-        <div class="testimonial-box-custom">
-            <img alt="VK Gupta" src="{% if about.testimonial_author_image %}{{ about.testimonial_author_image.url }}{% else %}https://chaitanyafiles01.s3.amazonaws.com/aboutImages/vkgupta.png{% endif %}" class="testimonial-img-custom">
-            <div>
-                <div class="testimonial-text-custom" style="font-family: Tahoma, Geneva, sans-serif;">
-                    {{ about.testimonial_text|safe }}
+        <h3 class="leadership-section-title">Leadership Messages</h3>
+        <div class="row g-4">
+            {% for member in leadership_members %}
+                <div class="col-lg-6">
+                    {% include 'core/includes/leadership_card.html' with member=member show_edit=False %}
                 </div>
-                <div class="testimonial-author-custom" style="font-family: Tahoma, Geneva, sans-serif;">
-                    {{ about.testimonial_author }}
+            {% empty %}
+                <div class="col-12">
+                    <div class="card feedback-card" style="padding:12px;">
+                        <div class="card-body">
+                            <div class="card-text" style="padding:5px;text-align:justify;">
+                                <p>{{ about.testimonial_text|safe }}</p>
+                                <div class="nameplate-container">
+                                    <img alt="{{ about.testimonial_author }}" class="nameplate-img" src="{% if about.testimonial_author_image %}{{ about.testimonial_author_image.url }}{% else %}https://chaitanyafiles01.s3.amazonaws.com/aboutImages/vkgupta.png{% endif %}">
+                                    <div class="name-template">
+                                        <h5 class="name">{{ about.testimonial_author }}</h5>
+                                        <p class="organization">Chaitanya Science and Arts College</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>

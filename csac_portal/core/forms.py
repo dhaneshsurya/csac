@@ -728,9 +728,10 @@ from .models import Leadership
 class LeadershipForm(forms.ModelForm):
     class Meta:
         model = Leadership
-        fields = ['name', 'qualification', 'photo', 'message']
+        fields = ['name', 'qualification', 'email', 'photo', 'message']
         widgets = {
             'message': forms.Textarea(attrs={'rows': 6}),
+            'email': forms.EmailInput(attrs={'placeholder': 'e.g. principal@chaitanyacg.ac.in'}),
         }
 
     def __init__(self, *args, **kwargs):

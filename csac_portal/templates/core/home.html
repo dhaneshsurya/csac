@@ -256,34 +256,18 @@
 <!-- Messages Section -->
 <section class="feedback rts-section-padding">
   <div class="container">
-    <div class="row">
-      <!-- Founder & Chairman message -->
-      <div class="col-lg-6">
-        <div class="card feedback-card" style="padding:12px;">
-          <div class="card-body">
-            {% if request.user.is_staff %}
-              <div class="text-end mb-2">
-                <a href="{% url 'core:edit_leadership' 'director' %}" class="btn btn-xs btn-outline-danger rounded-pill py-1 px-3" style="font-size: 12px; font-weight: 600;"><i class="fas fa-edit me-1"></i>Edit Message</a>
-              </div>
-            {% endif %}
-            <div class="card-text" style="padding:5px;text-align:justify;">
-              {% if director_member or chairman_member %}
-                {% with member=director_member|default:chairman_member %}
-                  <p>{{ member.message|linebreaksbr }}</p>
-                  <div class="nameplate-container">
-                    {% if member.photo %}
-                      <img alt="{{ member.name }}" class="nameplate-img" src="{{ member.photo.url }}"/>
-                    {% else %}
-                      <img alt="{{ member.name }}" class="nameplate-img" src="https://chaitanyafiles01.s3.amazonaws.com/directorImages/DSC_0086.JPG"/>
-                    {% endif %}
-                    <div class="name-template">
-                      <h5 class="name">{{ member.name }}</h5>
-                      <p class="title">{{ member.get_role_display }}{% if member.qualification %}, {{ member.qualification }}{% endif %}</p>
-                      <p class="organization">Chaitanya Science and Arts College</p>
-                    </div>
-                  </div>
-                {% endwith %}
-              {% else %}
+    <div class="row g-4">
+      {% if director_member or chairman_member %}
+        <div class="col-lg-6">
+          {% with member=director_member|default:chairman_member %}
+            {% include 'core/includes/leadership_card.html' with member=member show_edit=True %}
+          {% endwith %}
+        </div>
+      {% else %}
+        <div class="col-lg-6">
+          <div class="card feedback-card h-100" style="padding:12px;">
+            <div class="card-body">
+              <div class="card-text" style="padding:5px;text-align:justify;">
                 <p>Welcome to Chaitanya Science and Arts College, where our mission is to empower rural youth, especially those from economically disadvantaged backgrounds, with high-quality education. We are dedicated to fostering academic excellence, personal growth, and social responsibility in our students. Together, we aim to build a brighter future for individuals and the community.</p>
                 <div class="nameplate-container">
                   <img alt="Mr Veerendra Tiwari" class="nameplate-img" src="https://chaitanyafiles01.s3.amazonaws.com/directorImages/DSC_0086.JPG"/>
@@ -293,36 +277,21 @@
                     <p class="organization">Chaitanya Science and Arts College</p>
                   </div>
                 </div>
-              {% endif %}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- Principal message -->
-      <div class="col-lg-6">
-        <div class="card feedback-card" style="padding:12px;">
-          <div class="card-body">
-            {% if request.user.is_staff %}
-              <div class="text-end mb-2">
-                <a href="{% url 'core:edit_leadership' 'principal' %}" class="btn btn-xs btn-outline-danger rounded-pill py-1 px-3" style="font-size: 12px; font-weight: 600;"><i class="fas fa-edit me-1"></i>Edit Message</a>
-              </div>
-            {% endif %}
-            <div class="card-text" style="padding:5px;text-align:justify;">
-              {% if principal_member %}
-                <p>{{ principal_member.message|linebreaksbr }}</p>
-                <div class="nameplate-container">
-                  {% if principal_member.photo %}
-                    <img alt="{{ principal_member.name }}" class="nameplate-img" src="{{ principal_member.photo.url }}"/>
-                  {% else %}
-                    <img alt="{{ principal_member.name }}" class="nameplate-img" src="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/vkgupta.png"/>
-                  {% endif %}
-                  <div class="name-template">
-                    <h5 class="name">{{ principal_member.name }}</h5>
-                    <p class="title">{{ principal_member.get_role_display }}{% if principal_member.qualification %}, {{ principal_member.qualification }}{% endif %}</p>
-                    <p class="organization">Chaitanya Science and Arts College</p>
-                  </div>
-                </div>
-              {% else %}
+      {% endif %}
+
+      {% if principal_member %}
+        <div class="col-lg-6">
+          {% include 'core/includes/leadership_card.html' with member=principal_member show_edit=True %}
+        </div>
+      {% else %}
+        <div class="col-lg-6">
+          <div class="card feedback-card h-100" style="padding:12px;">
+            <div class="card-body">
+              <div class="card-text" style="padding:5px;text-align:justify;">
                 <p>Welcome to Chaitanya Science and Arts College, where we provide high-quality education to empower rural youth and foster academic and personal growth. Our goal is to help students achieve excellence and contribute positively to society. We are committed to nurturing innovation, critical thinking, and leadership skills in every student.</p>
                 <div class="nameplate-container">
                   <img alt="Dr Vinod Kumar Gupta" class="nameplate-img" src="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/vkgupta.png"/>
@@ -332,11 +301,11 @@
                     <p class="organization">Chaitanya Science and Arts College</p>
                   </div>
                 </div>
-              {% endif %}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 </section>

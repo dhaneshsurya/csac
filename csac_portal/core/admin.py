@@ -120,9 +120,10 @@ class CollegeInfoAdmin(admin.ModelAdmin):
 
 @admin.register(Leadership)
 class LeadershipAdmin(admin.ModelAdmin):
-    list_display = ('name', 'role', 'order')
+    list_display = ('name', 'role', 'email', 'order')
     list_filter = ('role',)
     list_editable = ('order',)
+    search_fields = ('name', 'email', 'qualification')
 
 
 class CommitteeMemberInline(admin.TabularInline):

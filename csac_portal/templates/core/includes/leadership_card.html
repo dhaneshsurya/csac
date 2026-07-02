@@ -1,0 +1,29 @@
+<div class="card feedback-card h-100" style="padding:12px;">
+  <div class="card-body">
+    {% if show_edit and request.user.is_staff and member.role %}
+      <div class="text-end mb-2">
+        <a href="{% url 'core:edit_leadership' member.role %}" class="btn btn-xs btn-outline-danger rounded-pill py-1 px-3" style="font-size: 12px; font-weight: 600;">
+          <i class="fas fa-edit me-1"></i>Edit Message
+        </a>
+      </div>
+    {% endif %}
+    <div class="card-text" style="padding:5px;text-align:justify;">
+      {% if member.message %}
+        <p>{{ member.message|linebreaksbr }}</p>
+      {% endif %}
+      <div class="nameplate-container">
+        <img alt="{{ member.name }}" class="nameplate-img" src="{{ member.get_photo_url }}"/>
+        <div class="name-template">
+          <h5 class="name">{{ member.name }}</h5>
+          <p class="title">{{ member.get_role_display }}{% if member.qualification %}, {{ member.qualification }}{% endif %}</p>
+          {% if member.email %}
+            <p class="email" style="margin-bottom: 4px;">
+              <a href="mailto:{{ member.email }}" style="color: #B71A34; text-decoration: none; font-weight: 600;">{{ member.email }}</a>
+            </p>
+          {% endif %}
+          <p class="organization">Chaitanya Science and Arts College</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

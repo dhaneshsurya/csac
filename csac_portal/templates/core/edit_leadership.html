@@ -104,6 +104,13 @@
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label-custom">Email</label>
+                    {{ form.email }}
+                    <small class="text-muted">Shown on the home page and about page leadership sections.</small>
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label-custom">Photo</label>
                     {{ form.photo }}
                     {% if member.photo %}
@@ -118,7 +125,7 @@
                 <div class="mb-4">
                     <label class="form-label-custom">Message</label>
                     {{ form.message }}
-                    <small class="text-muted">This message will appear in the home page leadership messages section.</small>
+                    <small class="text-muted">This message will appear on the home page and about page leadership sections.</small>
                     {{ form.message.errors }}
                 </div>
 

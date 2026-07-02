@@ -124,9 +124,11 @@ def about(request):
         )
 
     features = [f.strip() for f in about_page.features_list.split('\n') if f.strip()]
+    leadership_members = Leadership.objects.all().order_by('order', 'id')
     context = {
         'about': about_page,
         'features': features,
+        'leadership_members': leadership_members,
         'page_title': 'About Us',
         'breadcrumb': about_page.page_title,
     }
