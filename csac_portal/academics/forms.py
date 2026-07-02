@@ -43,11 +43,7 @@ class DepartmentBannerForm(forms.ModelForm):
 
 
 class ProgramForm(forms.ModelForm):
-    program_type = forms.ModelChoiceField(
-        queryset=ProgramType.objects.filter(is_active=True).order_by('order', 'name'),
-        to_field_name='code',
-        label='Program Type',
-    )
+    program_type = forms.ChoiceField(label='Program Type')
 
     class Meta:
         model = Program
@@ -60,7 +56,19 @@ class ProgramForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['program_type'].queryset = ProgramType.objects.filter(is_active=True).order_by('order', 'name')
+        active_types = ProgramType.objects.filter(is_active=True).order_by('order', 'name')
+        self.fields['program_type'].choices = [(pt.code, pt.name) for pt in active_types]
+
+        if self.instance.pk and self.instance.program_type:
+            stored_type = self.instance.program_type
+            if not active_types.filter(code=stored_type).exists():
+                legacy_type = (
+                    ProgramType.objects.filter(name=stored_type).first()
+                    or ProgramType.objects.filter(code__iexact=stored_type).first()
+                )
+                if legacy_type:
+                    self.initial['program_type'] = legacy_type.code
+
         for field_name, field in self.fields.items():
             if not isinstance(field.widget, forms.CheckboxInput):
                 existing_classes = field.widget.attrs.get('class', '')

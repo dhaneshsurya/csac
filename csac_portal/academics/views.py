@@ -1,5 +1,12 @@
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from .models import Department, Program, ProgramType, COPOMapping, AcademicCalendar, Syllabus
+
+
+def _programs_for_type(program_type, programs_queryset):
+    return programs_queryset.filter(
+        Q(program_type=program_type.code) | Q(program_type=program_type.name)
+    )
 
 
 def department_detail(request, slug):
@@ -30,7 +37,7 @@ def programs(request):
     program_tab_sections = [
         {
             'program_type': program_type,
-            'programs': all_programs.filter(program_type=program_type.code),
+            'programs': _programs_for_type(program_type, all_programs),
         }
         for program_type in program_types
     ]
