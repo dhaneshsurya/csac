@@ -23,7 +23,7 @@
       <div class="nameplate-container {% if modern_home %}home-leadership-nameplate{% endif %}">
         <img alt="{{ member.name }}" class="nameplate-img" src="{{ member.get_photo_url }}"/>
         <div class="name-template">
-          <h5 class="name">{{ member.name }}</h5>
+          <h5 class="name leadership-name">{{ member.name }}</h5>
           <p class="title">{{ member.get_role_display }}{% if member.qualification %}, {{ member.qualification }}{% endif %}</p>
           {% if member.email %}
             <p class="leadership-email-simple">
