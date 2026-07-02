@@ -3,6 +3,117 @@
 
 {% block title %}Chaitanya Science and Arts College, Pamgarh - Home{% endblock %}
 
+{% block extra_css %}
+<style>
+  .home-leadership-card {
+    border: 1px solid rgba(183, 26, 52, 0.1);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcfd 100%);
+  }
+  .leadership-message-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+    padding: 18px 18px 18px 16px;
+    background: #f8fafc;
+    border: 1px solid #e8edf3;
+    border-radius: 14px;
+  }
+  .leadership-message-icon {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #B71A34 0%, #8f1429 100%);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 8px 18px rgba(183, 26, 52, 0.22);
+  }
+  .leadership-message-text {
+    flex: 1;
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.75;
+    font-style: italic;
+    text-align: justify;
+  }
+  .home-leadership-nameplate {
+    margin-top: 8px;
+    padding-top: 18px;
+    border-top: 1px dashed #e5e7eb;
+  }
+  .home-leadership-nameplate .name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+  }
+  .home-leadership-nameplate .title {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+  }
+  .home-leadership-nameplate .organization {
+    font-size: 13px;
+    color: #9ca3af;
+    margin-bottom: 0;
+  }
+  .leadership-email-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 6px 12px 6px 8px;
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.14);
+    border-radius: 999px;
+  }
+  .leadership-email-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .leadership-email-link {
+    color: #1d4ed8;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .leadership-email-link:hover {
+    color: #1e40af;
+    text-decoration: underline;
+  }
+  @media (max-width: 767px) {
+    .leadership-message-block {
+      gap: 12px;
+      padding: 14px;
+    }
+    .leadership-message-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 16px;
+    }
+    .leadership-message-text {
+      font-size: 14px;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Banner -->
 <div class="banner v__5">
@@ -260,16 +371,21 @@
       {% if director_member or chairman_member %}
         <div class="col-lg-6">
           {% with member=director_member|default:chairman_member %}
-            {% include 'core/includes/leadership_card.html' with member=member show_edit=True %}
+            {% include 'core/includes/leadership_card.html' with member=member show_edit=True modern_home=True %}
           {% endwith %}
         </div>
       {% else %}
         <div class="col-lg-6">
-          <div class="card feedback-card h-100" style="padding:12px;">
+          <div class="card feedback-card h-100 home-leadership-card" style="padding:12px;">
             <div class="card-body">
-              <div class="card-text" style="padding:5px;text-align:justify;">
-                <p>Welcome to Chaitanya Science and Arts College, where our mission is to empower rural youth, especially those from economically disadvantaged backgrounds, with high-quality education. We are dedicated to fostering academic excellence, personal growth, and social responsibility in our students. Together, we aim to build a brighter future for individuals and the community.</p>
-                <div class="nameplate-container">
+              <div class="card-text" style="padding:5px;">
+                <div class="leadership-message-block">
+                  <div class="leadership-message-icon" aria-hidden="true">
+                    <i class="fa-solid fa-quote-left"></i>
+                  </div>
+                  <div class="leadership-message-text">Welcome to Chaitanya Science and Arts College, where our mission is to empower rural youth, especially those from economically disadvantaged backgrounds, with high-quality education. We are dedicated to fostering academic excellence, personal growth, and social responsibility in our students. Together, we aim to build a brighter future for individuals and the community.</div>
+                </div>
+                <div class="nameplate-container home-leadership-nameplate">
                   <img alt="Mr Veerendra Tiwari" class="nameplate-img" src="https://chaitanyafiles01.s3.amazonaws.com/directorImages/DSC_0086.JPG"/>
                   <div class="name-template">
                     <h5 class="name">Mr Veerendra Tiwari</h5>
@@ -285,15 +401,20 @@
 
       {% if principal_member %}
         <div class="col-lg-6">
-          {% include 'core/includes/leadership_card.html' with member=principal_member show_edit=True %}
+          {% include 'core/includes/leadership_card.html' with member=principal_member show_edit=True modern_home=True %}
         </div>
       {% else %}
         <div class="col-lg-6">
-          <div class="card feedback-card h-100" style="padding:12px;">
+          <div class="card feedback-card h-100 home-leadership-card" style="padding:12px;">
             <div class="card-body">
-              <div class="card-text" style="padding:5px;text-align:justify;">
-                <p>Welcome to Chaitanya Science and Arts College, where we provide high-quality education to empower rural youth and foster academic and personal growth. Our goal is to help students achieve excellence and contribute positively to society. We are committed to nurturing innovation, critical thinking, and leadership skills in every student.</p>
-                <div class="nameplate-container">
+              <div class="card-text" style="padding:5px;">
+                <div class="leadership-message-block">
+                  <div class="leadership-message-icon" aria-hidden="true">
+                    <i class="fa-solid fa-quote-left"></i>
+                  </div>
+                  <div class="leadership-message-text">Welcome to Chaitanya Science and Arts College, where we provide high-quality education to empower rural youth and foster academic and personal growth. Our goal is to help students achieve excellence and contribute positively to society. We are committed to nurturing innovation, critical thinking, and leadership skills in every student.</div>
+                </div>
+                <div class="nameplate-container home-leadership-nameplate">
                   <img alt="Dr Vinod Kumar Gupta" class="nameplate-img" src="https://chaitanyafiles01.s3.amazonaws.com/aboutImages/vkgupta.png"/>
                   <div class="name-template">
                     <h5 class="name">Dr Vinod Kumar Gupta</h5>
