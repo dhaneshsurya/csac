@@ -6,14 +6,19 @@ class DepartmentForm(forms.ModelForm):
         model = Department
         fields = '__all__'
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 8}),
             'hod_message': forms.Textarea(attrs={'rows': 4}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        rich_text_fields = {'description'}
+        file_fields = {'hod_photo', 'banner_image'}
         for field_name, field in self.fields.items():
-            if not isinstance(field.widget, forms.CheckboxInput) and field_name not in ['hod_photo', 'banner_image']:
+            if (
+                not isinstance(field.widget, forms.CheckboxInput)
+                and field_name not in file_fields
+                and field_name not in rich_text_fields
+            ):
                 existing_classes = field.widget.attrs.get('class', '')
                 field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
 
