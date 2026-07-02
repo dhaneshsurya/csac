@@ -79,26 +79,46 @@ class DepartmentActivity(models.Model):
         return self.title
 
 
+class ProgramType(models.Model):
+    code = models.SlugField(
+        max_length=30,
+        unique=True,
+        help_text="Short code stored on programs, e.g. ug, pg, diploma",
+    )
+    name = models.CharField(max_length=100, help_text="Label shown in admin when selecting a program type")
+    tab_label = models.CharField(max_length=120, help_text="Label shown on the programs page tab")
+    icon_class = models.CharField(
+        max_length=80,
+        default='fas fa-book',
+        help_text="Font Awesome icon class for the programs page tab",
+    )
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    show_in_tab = models.BooleanField(
+        default=True,
+        help_text="Show this type as a separate tab on the programs page",
+    )
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'Program Type'
+        verbose_name_plural = 'Program Types'
+
+    def __str__(self):
+        return self.name
+
+
 class Program(models.Model):
-    DURATION_CHOICES = [
-        ('1', '1 Year'),
-        ('2', '2 Years'),
-        ('3', '3 Years'),
-        ('4', '4 Years'),
-        ('5', '5 Years'),
-    ]
-    TYPE_CHOICES = [
-        ('ug', 'Undergraduate'),
-        ('pg', 'Postgraduate'),
-        ('diploma', 'Diploma'),
-        ('cert', 'Certificate'),
-    ]
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='programs')
     name = models.CharField(max_length=200)
-    program_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    duration = models.CharField(max_length=5, choices=DURATION_CHOICES)
+    program_type = models.CharField(max_length=30, help_text="Program type code from Program Types")
+    duration = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="e.g. 3 Years, 4 Semesters, 2 Years",
+    )
     eligibility = models.TextField(blank=True)
-    seats = models.CharField(max_length=50, default='0')
+    seats = models.CharField(max_length=50, default='0', verbose_name='Total Seats')
     introduced_year = models.IntegerField(blank=True, null=True)
     affiliation_status = models.CharField(max_length=100, blank=True)
     fee_per_year = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -109,7 +129,12 @@ class Program(models.Model):
         ordering = ['order', 'name']
 
     def __str__(self):
-        return f"{self.name} ({self.get_program_type_display()})"
+        type_label = self.get_program_type_label()
+        return f"{self.name} ({type_label})" if type_label else self.name
+
+    def get_program_type_label(self):
+        program_type = ProgramType.objects.filter(code=self.program_type, is_active=True).first()
+        return program_type.name if program_type else self.program_type
 
 
 class COPOMapping(models.Model):

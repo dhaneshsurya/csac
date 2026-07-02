@@ -1,5 +1,5 @@
 from django import forms
-from .models import Department, DepartmentFaculty, DepartmentBanner, Program
+from .models import Department, DepartmentFaculty, DepartmentBanner, Program, ProgramType
 
 class DepartmentForm(forms.ModelForm):
     class Meta:
@@ -43,12 +43,36 @@ class DepartmentBannerForm(forms.ModelForm):
 
 
 class ProgramForm(forms.ModelForm):
+    program_type = forms.ModelChoiceField(
+        queryset=ProgramType.objects.filter(is_active=True).order_by('order', 'name'),
+        to_field_name='code',
+        label='Program Type',
+    )
+
     class Meta:
         model = Program
         fields = '__all__'
         widgets = {
+            'duration': forms.TextInput(attrs={'placeholder': 'e.g. 3 Years, 6 Semesters'}),
             'eligibility': forms.Textarea(attrs={'rows': 3}),
             'description': forms.Textarea(attrs={'rows': 5}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['program_type'].queryset = ProgramType.objects.filter(is_active=True).order_by('order', 'name')
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class ProgramTypeForm(forms.ModelForm):
+    class Meta:
+        model = ProgramType
+        fields = '__all__'
+        widgets = {
+            'icon_class': forms.TextInput(attrs={'placeholder': 'e.g. fas fa-graduation-cap'}),
         }
 
     def __init__(self, *args, **kwargs):

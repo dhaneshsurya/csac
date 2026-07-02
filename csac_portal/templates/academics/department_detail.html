@@ -199,7 +199,7 @@
                             {% for prog in programs %}
                             <tr>
                                 <strong><td>{{ prog.name }}</td></strong>
-                                <td>{{ prog.get_duration_display }}</td>
+                                <td>{{ prog.duration|default:"-" }}</td>
                                 <td class="small">{{ prog.eligibility }}</td>
                                 <td>{{ prog.seats }}</td>
                             </tr>

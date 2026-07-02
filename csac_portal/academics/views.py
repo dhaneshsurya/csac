@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Department, Program, COPOMapping, AcademicCalendar, Syllabus
+from .models import Department, Program, ProgramType, COPOMapping, AcademicCalendar, Syllabus
 
 
 def department_detail(request, slug):
@@ -25,16 +25,20 @@ def department_detail(request, slug):
 
 
 def programs(request):
-    all_programs = Program.objects.select_related('department').all()
-    ug_programs = all_programs.filter(program_type='ug')
-    pg_programs = all_programs.filter(program_type='pg')
-    diploma_programs = all_programs.filter(program_type='diploma')
+    all_programs = Program.objects.select_related('department').order_by('order', 'name')
+    program_types = ProgramType.objects.filter(is_active=True, show_in_tab=True).order_by('order', 'name')
+    program_tab_sections = [
+        {
+            'program_type': program_type,
+            'programs': all_programs.filter(program_type=program_type.code),
+        }
+        for program_type in program_types
+    ]
     departments = Department.objects.all()
     context = {
         'all_programs': all_programs,
-        'ug_programs': ug_programs,
-        'pg_programs': pg_programs,
-        'diploma_programs': diploma_programs,
+        'program_types': program_types,
+        'program_tab_sections': program_tab_sections,
         'departments': departments,
         'page_title': 'Programs Offered',
         'breadcrumb': 'Programs Offered',

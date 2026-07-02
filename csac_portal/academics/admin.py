@@ -1,6 +1,9 @@
 from django.contrib import admin
-from .models import Department, DepartmentFaculty, DepartmentActivity, Program, COPOMapping, Syllabus, AcademicCalendar, DepartmentBanner
-from .forms import DepartmentFacultyForm, DepartmentForm, DepartmentBannerForm, ProgramForm
+from .models import (
+    Department, DepartmentFaculty, DepartmentActivity, Program, ProgramType,
+    COPOMapping, Syllabus, AcademicCalendar, DepartmentBanner,
+)
+from .forms import DepartmentFacultyForm, DepartmentForm, DepartmentBannerForm, ProgramForm, ProgramTypeForm
 
 
 class DepartmentBannerInline(admin.TabularInline):
@@ -54,11 +57,21 @@ class DepartmentFacultyAdmin(admin.ModelAdmin):
 
 
 
+@admin.register(ProgramType)
+class ProgramTypeAdmin(admin.ModelAdmin):
+    form = ProgramTypeForm
+    list_display = ('name', 'code', 'tab_label', 'icon_class', 'order', 'is_active', 'show_in_tab')
+    list_editable = ('order', 'is_active', 'show_in_tab')
+    list_filter = ('is_active', 'show_in_tab')
+    search_fields = ('name', 'code', 'tab_label')
+    prepopulated_fields = {'code': ('name',)}
+
+
 @admin.register(Program)
 class ProgramAdmin(admin.ModelAdmin):
     form = ProgramForm
-    list_display = ('name', 'program_type', 'department', 'duration', 'seats', 'introduced_year', 'affiliation_status', 'order')
-    list_filter = ('program_type', 'department', 'affiliation_status')
+    list_display = ('name', 'program_type', 'department', 'duration', 'seats', 'introduced_year', 'order')
+    list_filter = ('program_type', 'department')
     list_editable = ('order',)
     search_fields = ('name',)
 

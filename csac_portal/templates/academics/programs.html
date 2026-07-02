@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
@@ -28,208 +28,35 @@
             </div>
         </div>
 
-        <!-- Bootstrap Tabs for Program Categories -->
         <div class="row">
             <div class="col-12">
-                <!-- Nav tabs -->
                 <ul class="nav nav-tabs justify-content-center border-bottom mb-4" id="programTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active fw-bold text-dark px-4 py-3" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-pane" type="button" role="tab" aria-controls="all-pane" aria-selected="true">
                             <i class="fas fa-list me-2 text-danger"></i> All Programs
                         </button>
                     </li>
+                    {% for program_type in program_types %}
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-bold text-dark px-4 py-3" id="ug-tab" data-bs-toggle="tab" data-bs-target="#ug-pane" type="button" role="tab" aria-controls="ug-pane" aria-selected="false">
-                            <i class="fas fa-graduation-cap me-2 text-danger"></i> Undergraduate (UG)
+                        <button class="nav-link fw-bold text-dark px-4 py-3" id="{{ program_type.code }}-tab" data-bs-toggle="tab" data-bs-target="#{{ program_type.code }}-pane" type="button" role="tab" aria-controls="{{ program_type.code }}-pane" aria-selected="false">
+                            <i class="{{ program_type.icon_class }} me-2 text-danger"></i> {{ program_type.tab_label }}
                         </button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-bold text-dark px-4 py-3" id="pg-tab" data-bs-toggle="tab" data-bs-target="#pg-pane" type="button" role="tab" aria-controls="pg-pane" aria-selected="false">
-                            <i class="fas fa-user-graduate me-2 text-danger"></i> Postgraduate (PG)
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-bold text-dark px-4 py-3" id="diploma-tab" data-bs-toggle="tab" data-bs-target="#diploma-pane" type="button" role="tab" aria-controls="diploma-pane" aria-selected="false">
-                            <i class="fas fa-scroll me-2 text-danger"></i> Diploma &amp; Certificate
-                        </button>
-                    </li>
+                    {% endfor %}
                 </ul>
 
-                <!-- Tab content -->
                 <div class="tab-content bg-white p-4 rounded shadow-sm border" id="programTabsContent">
-                    
-                    <!-- All Programs pane -->
                     <div class="tab-pane fade show active" id="all-pane" role="tabpanel" aria-labelledby="all-tab">
                         <h4 class="fw-bold mb-3 text-dark">All Academic Programs</h4>
-                        {% if all_programs %}
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover align-middle">
-                                <thead class="table-light text-dark">
-                                    <tr>
-                                        <th style="width: 80px;">Sr. No.</th>
-                                        <th>Name of the Programme leading to Degree</th>
-                                        <th>Year of introduction of Programme</th>
-                                        <th>Programme Duration</th>
-                                        <th>Intake Capacity</th>
-                                        <th>Current Affiliation Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for prog in all_programs %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <strong><td>{{ prog.name }}</td></strong>
-                                        <td>{{ prog.introduced_year|default:"-" }}</td>
-                                        <td>{{ prog.get_duration_display }}</td>
-                                        <td>{{ prog.seats }}</td>
-                                        <td>
-                                            {% if prog.affiliation_status|lower == 'permanent' %}
-                                                <span class="badge bg-success text-white">{{ prog.affiliation_status }}</span>
-                                            {% elif prog.affiliation_status|lower == 'temporary' %}
-                                                <span class="badge bg-warning text-dark">{{ prog.affiliation_status }}</span>
-                                            {% else %}
-                                                {{ prog.affiliation_status|default:"-" }}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-secondary border-0 shadow-sm mb-0">No programs listed at the moment.</div>
-                        {% endif %}
+                        {% include 'academics/includes/program_table.html' with programs=all_programs %}
                     </div>
 
-                    <!-- UG pane -->
-                    <div class="tab-pane fade" id="ug-pane" role="tabpanel" aria-labelledby="ug-tab">
-                        <h4 class="fw-bold mb-3 text-dark">Undergraduate Programs</h4>
-                        {% if ug_programs %}
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover align-middle">
-                                <thead class="table-light text-dark">
-                                    <tr>
-                                        <th style="width: 80px;">Sr. No.</th>
-                                        <th>Name of the Programme leading to Degree</th>
-                                        <th>Year of introduction of Programme</th>
-                                        <th>Programme Duration</th>
-                                        <th>Intake Capacity</th>
-                                        <th>Current Affiliation Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for prog in ug_programs %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <strong><td>{{ prog.name }}</td></strong>
-                                        <td>{{ prog.introduced_year|default:"-" }}</td>
-                                        <td>{{ prog.get_duration_display }}</td>
-                                        <td>{{ prog.seats }}</td>
-                                        <td>
-                                            {% if prog.affiliation_status|lower == 'permanent' %}
-                                                <span class="badge bg-success text-white">{{ prog.affiliation_status }}</span>
-                                            {% elif prog.affiliation_status|lower == 'temporary' %}
-                                                <span class="badge bg-warning text-dark">{{ prog.affiliation_status }}</span>
-                                            {% else %}
-                                                {{ prog.affiliation_status|default:"-" }}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-secondary border-0 shadow-sm mb-0">No undergraduate programs listed at the moment.</div>
-                        {% endif %}
+                    {% for section in program_tab_sections %}
+                    <div class="tab-pane fade" id="{{ section.program_type.code }}-pane" role="tabpanel" aria-labelledby="{{ section.program_type.code }}-tab">
+                        <h4 class="fw-bold mb-3 text-dark">{{ section.program_type.tab_label }}</h4>
+                        {% include 'academics/includes/program_table.html' with programs=section.programs %}
                     </div>
-
-                    <!-- PG pane -->
-                    <div class="tab-pane fade" id="pg-pane" role="tabpanel" aria-labelledby="pg-tab">
-                        <h4 class="fw-bold mb-3 text-dark">Postgraduate Programs</h4>
-                        {% if pg_programs %}
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover align-middle">
-                                <thead class="table-light text-dark">
-                                    <tr>
-                                        <th style="width: 80px;">Sr. No.</th>
-                                        <th>Name of the Programme leading to Degree</th>
-                                        <th>Year of introduction of Programme</th>
-                                        <th>Programme Duration</th>
-                                        <th>Intake Capacity</th>
-                                        <th>Current Affiliation Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for prog in pg_programs %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <strong><td>{{ prog.name }}</td></strong>
-                                        <td>{{ prog.introduced_year|default:"-" }}</td>
-                                        <td>{{ prog.get_duration_display }}</td>
-                                        <td>{{ prog.seats }}</td>
-                                        <td>
-                                            {% if prog.affiliation_status|lower == 'permanent' %}
-                                                <span class="badge bg-success text-white">{{ prog.affiliation_status }}</span>
-                                            {% elif prog.affiliation_status|lower == 'temporary' %}
-                                                <span class="badge bg-warning text-dark">{{ prog.affiliation_status }}</span>
-                                            {% else %}
-                                                {{ prog.affiliation_status|default:"-" }}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-secondary border-0 shadow-sm mb-0">No postgraduate programs listed at the moment.</div>
-                        {% endif %}
-                    </div>
-
-                    <!-- Diploma pane -->
-                    <div class="tab-pane fade" id="diploma-pane" role="tabpanel" aria-labelledby="diploma-tab">
-                        <h4 class="fw-bold mb-3 text-dark">Diploma &amp; Certificate Programs</h4>
-                        {% if diploma_programs %}
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover align-middle">
-                                <thead class="table-light text-dark">
-                                    <tr>
-                                        <th style="width: 80px;">Sr. No.</th>
-                                        <th>Name of the Programme leading to Degree</th>
-                                        <th>Year of introduction of Programme</th>
-                                        <th>Programme Duration</th>
-                                        <th>Intake Capacity</th>
-                                        <th>Current Affiliation Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for prog in diploma_programs %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <strong><td>{{ prog.name }}</td></strong>
-                                        <td>{{ prog.introduced_year|default:"-" }}</td>
-                                        <td>{{ prog.get_duration_display }}</td>
-                                        <td>{{ prog.seats }}</td>
-                                        <td>
-                                            {% if prog.affiliation_status|lower == 'permanent' %}
-                                                <span class="badge bg-success text-white">{{ prog.affiliation_status }}</span>
-                                            {% elif prog.affiliation_status|lower == 'temporary' %}
-                                                <span class="badge bg-warning text-dark">{{ prog.affiliation_status }}</span>
-                                            {% else %}
-                                                {{ prog.affiliation_status|default:"-" }}
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        {% else %}
-                        <div class="alert alert-secondary border-0 shadow-sm mb-0">No diploma/certificate programs listed at the moment.</div>
-                        {% endif %}
-                    </div>
-
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -237,7 +64,6 @@
     </div>
 </section>
 
-<!-- Custom tab coloring -->
 <style>
     .nav-tabs .nav-link.active {
         border-color: #E61013 #E61013 #fff !important;
