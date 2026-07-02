@@ -26,18 +26,10 @@
           <h5 class="name">{{ member.name }}</h5>
           <p class="title">{{ member.get_role_display }}{% if member.qualification %}, {{ member.qualification }}{% endif %}</p>
           {% if member.email %}
-            {% if modern_home %}
-              <div class="leadership-email-line">
-                <span class="leadership-email-icon" aria-hidden="true">
-                  <i class="fa-regular fa-envelope"></i>
-                </span>
-                <a href="mailto:{{ member.email }}" class="leadership-email-link">{{ member.email }}</a>
-              </div>
-            {% else %}
-              <p class="email" style="margin-bottom: 4px;">
-                <a href="mailto:{{ member.email }}" style="color: #B71A34; text-decoration: none; font-weight: 600;">{{ member.email }}</a>
-              </p>
-            {% endif %}
+            <p class="leadership-email-simple">
+              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+              <a href="mailto:{{ member.email }}">{{ member.email }}</a>
+            </p>
           {% endif %}
           <p class="organization">Chaitanya Science and Arts College</p>
         </div>
