@@ -1291,6 +1291,27 @@ class SportsPageSettings(models.Model):
         return [line.strip() for line in self.policies.splitlines() if line.strip()]
 
 
+class TeachingStaffPageSettings(models.Model):
+    """Singleton settings for the teaching staff listing page header."""
+    title = models.CharField(
+        max_length=200,
+        default='Faculty List 2025-26',
+        help_text='Main heading shown on the teaching staff page',
+    )
+    subtitle = models.TextField(
+        default='Meet our dedicated, qualified, and experienced teaching staff members.',
+        help_text='Short description shown below the heading',
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Teaching Staff Page Settings'
+        verbose_name_plural = 'Teaching Staff Page Settings'
+
+    def __str__(self):
+        return self.title
+
+
 class SportsGalleryImage(models.Model):
     image = models.ImageField(upload_to='sports/gallery/', blank=True, null=True)
     image_url = models.URLField(blank=True, max_length=500, help_text="External URL for image if not uploaded locally")

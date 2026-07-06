@@ -10,7 +10,7 @@ from .models import (
     BreadcrumbSettings, PageBreadcrumb, NSSPageSettings, NSSActivity, NSSGalleryImage,
     IICPageSettings, IICGalleryImage, CampusMedia, Infrastructure, InfrastructureImage,
     Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
-    SportsPageSettings, SportsGalleryImage,
+    SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings,
     NEPTab, NEPTabFile, NEPTabLink,
     LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
     MenuItem
@@ -24,7 +24,7 @@ from .forms import (
     IICPageSettingsForm, IICGalleryImageForm, CampusMediaForm, TestimonialForm,
     InfrastructureForm, InfrastructureImageForm, AccreditationLogoForm, QuickLinkCardForm,
     ProductForm, ProductInquiryForm, ProductReviewForm,
-    SportsPageSettingsForm, SportsGalleryImageForm,
+    SportsPageSettingsForm, SportsGalleryImageForm, TeachingStaffPageSettingsForm,
     NEPTabForm, NEPTabFileForm, NEPTabLinkForm,
     LibraryPageSettingsForm, LibraryBookCategoryForm, LibraryResourceForm, LibraryBookSuggestionForm,
     LibraryGalleryImageForm, MenuItemForm
@@ -647,6 +647,17 @@ class ProductReviewAdmin(admin.ModelAdmin):
     list_editable = ('is_approved',)
     list_filter = ('product', 'rating', 'is_approved', 'created_at')
     search_fields = ('reviewer_name', 'reviewer_email', 'review_text')
+
+
+@admin.register(TeachingStaffPageSettings)
+class TeachingStaffPageSettingsAdmin(admin.ModelAdmin):
+    form = TeachingStaffPageSettingsForm
+    list_display = ('title',)
+
+    def has_add_permission(self, request):
+        if self.model.objects.exists():
+            return False
+        return True
 
 
 @admin.register(SportsPageSettings)

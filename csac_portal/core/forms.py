@@ -8,7 +8,7 @@ from .models import (
     IICPageSettings, IICGalleryImage, CampusMedia, Testimonial,
     Infrastructure, InfrastructureImage, AccreditationLogo, QuickLinkCard,
     Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
-    SportsPageSettings, SportsGalleryImage,
+    SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings,
     NEPTab, NEPTabFile, NEPTabLink,
     LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
     MenuItem
@@ -500,6 +500,22 @@ class ProductReviewForm(forms.ModelForm):
             'reviewer_email': forms.EmailInput(attrs={'placeholder': 'Your Email Address', 'required': True}),
             'rating': forms.Select(choices=[(i, f"{i} Stars") for i in range(5, 0, -1)]),
             'review_text': forms.Textarea(attrs={'placeholder': 'Share your experience with this product...', 'rows': 4, 'required': True}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class TeachingStaffPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = TeachingStaffPageSettings
+        fields = ['title', 'subtitle']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'e.g. Faculty List 2025-26'}),
+            'subtitle': forms.Textarea(attrs={'rows': 3}),
         }
 
     def __init__(self, *args, **kwargs):

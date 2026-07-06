@@ -191,6 +191,9 @@ def recognition(request):
 
 def staff_teaching(request):
     from academics.models import Department, DepartmentFaculty
+    from .models import TeachingStaffPageSettings
+
+    page_settings, _ = TeachingStaffPageSettings.objects.get_or_create(pk=1)
 
     faculty_groups = []
     departments = (
@@ -212,6 +215,7 @@ def staff_teaching(request):
 
     context = {
         'faculty_groups': faculty_groups,
+        'page_settings': page_settings,
         'page_title': 'Teaching Staff',
         'breadcrumb': 'Teaching Staff',
     }
@@ -961,6 +965,34 @@ def edit_leadership(request, role):
         'breadcrumb': f"Edit {member.get_role_display()}",
     }
     return render(request, 'core/edit_leadership.html', context)
+
+
+@staff_required
+def edit_teaching_staff_page(request):
+    from .models import TeachingStaffPageSettings
+    from .forms import TeachingStaffPageSettingsForm
+
+    page_settings, _ = TeachingStaffPageSettings.objects.get_or_create(pk=1)
+
+    if request.method == 'POST':
+        form = TeachingStaffPageSettingsForm(request.POST, instance=page_settings)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Teaching staff page content updated successfully!')
+            return redirect('core:staff_teaching')
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(request, f"Error in {field}: {error}")
+    else:
+        form = TeachingStaffPageSettingsForm(instance=page_settings)
+
+    context = {
+        'form': form,
+        'page_settings': page_settings,
+        'page_title': 'Edit Teaching Staff Page',
+        'breadcrumb': 'Edit Teaching Staff Page',
+    }
+    return render(request, 'core/edit_teaching_staff_page.html', context)
 
 
 @staff_required
