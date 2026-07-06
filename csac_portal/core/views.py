@@ -190,10 +190,28 @@ def recognition(request):
 
 
 def staff_teaching(request):
-    from academics.models import DepartmentFaculty
-    faculty = DepartmentFaculty.objects.select_related('department').all()
+    from academics.models import Department, DepartmentFaculty
+
+    faculty_groups = []
+    departments = (
+        Department.objects.filter(faculty__isnull=False)
+        .distinct()
+        .order_by('order', 'name')
+    )
+    for department in departments:
+        members = (
+            DepartmentFaculty.objects.filter(department=department)
+            .select_related('department')
+            .order_by('order', 'name')
+        )
+        if members.exists():
+            faculty_groups.append({
+                'department': department,
+                'members': members,
+            })
+
     context = {
-        'faculty': faculty,
+        'faculty_groups': faculty_groups,
         'page_title': 'Teaching Staff',
         'breadcrumb': 'Teaching Staff',
     }
