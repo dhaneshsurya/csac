@@ -1333,6 +1333,34 @@ class NonTeachingStaffPageSettings(models.Model):
         return self.title
 
 
+class NonTeachingStaffMember(models.Model):
+    name = models.CharField(max_length=150)
+    designation = models.CharField(max_length=200)
+    department_section = models.CharField(
+        max_length=200,
+        verbose_name='Department / Section',
+        help_text='e.g. Administration, Accounts, Library',
+    )
+    qualification = models.CharField(max_length=300, blank=True)
+    contact = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text='Phone number or email',
+    )
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = 'Non-Teaching Staff Member'
+        verbose_name_plural = 'Non-Teaching Staff Members'
+
+    def __str__(self):
+        return f"{self.name} ({self.designation})"
+
+
 class SportsGalleryImage(models.Model):
     image = models.ImageField(upload_to='sports/gallery/', blank=True, null=True)
     image_url = models.URLField(blank=True, max_length=500, help_text="External URL for image if not uploaded locally")

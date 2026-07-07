@@ -9,6 +9,7 @@ from .models import (
     Infrastructure, InfrastructureImage, AccreditationLogo, QuickLinkCard,
     Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
     SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings, NonTeachingStaffPageSettings,
+    NonTeachingStaffMember,
     NEPTab, NEPTabFile, NEPTabLink,
     LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
     MenuItem
@@ -539,6 +540,30 @@ class NonTeachingStaffPageSettingsForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             existing_classes = field.widget.attrs.get('class', '')
             field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class NonTeachingStaffMemberForm(forms.ModelForm):
+    class Meta:
+        model = NonTeachingStaffMember
+        fields = [
+            'name', 'designation', 'department_section',
+            'qualification', 'contact', 'order', 'is_active',
+        ]
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Enter full name'}),
+            'designation': forms.TextInput(attrs={'placeholder': 'e.g. Office Superintendent, Clerk'}),
+            'department_section': forms.TextInput(attrs={'placeholder': 'e.g. Administration, Accounts'}),
+            'qualification': forms.TextInput(attrs={'placeholder': 'e.g. B.Com., M.A.'}),
+            'contact': forms.TextInput(attrs={'placeholder': 'Phone or email'}),
+            'order': forms.NumberInput(attrs={'placeholder': '0'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                existing_classes = field.widget.attrs.get('class', '')
+                field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
 
 
 class SportsPageSettingsForm(forms.ModelForm):

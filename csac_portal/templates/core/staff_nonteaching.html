@@ -28,9 +28,14 @@
                         <p class="text-muted mb-0">{{ page_settings.subtitle }}</p>
                     </div>
                     {% if user.is_staff %}
-                    <a href="{% url 'core:edit_nonteaching_staff_page' %}" class="btn btn-outline-danger btn-sm rounded-pill">
-                        <i class="fas fa-edit me-1"></i>Edit Page
-                    </a>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{% url 'core:manage_nonteaching_staff' %}" class="btn btn-danger btn-sm rounded-pill">
+                            <i class="fas fa-user-plus me-1"></i>Manage Staff
+                        </a>
+                        <a href="{% url 'core:edit_nonteaching_staff_page' %}" class="btn btn-outline-danger btn-sm rounded-pill">
+                            <i class="fas fa-edit me-1"></i>Edit Page
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
                 <div style="width: 60px; height: 3px; background-color: #E61013; margin: 10px auto 30px auto;" class="d-md-none"></div>
@@ -38,7 +43,7 @@
             </div>
         </div>
 
-        <!-- Update Notice -->
+        {% if not staff_members %}
         <div class="row mb-5">
             <div class="col-12">
                 <div class="alert d-flex align-items-center border-0 shadow-sm" style="background-color: #fff3f3; border-left: 5px solid #E61013 !important; border-left-width: 5px;">
@@ -52,8 +57,8 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 
-        <!-- Placeholder Table Structure -->
         <div class="row">
             <div class="col-12">
                 <div class="card shadow-sm border-0">
@@ -74,12 +79,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {% for member in staff_members %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td class="fw-semibold">{{ member.name }}</td>
+                                        <td>{{ member.designation }}</td>
+                                        <td>{{ member.department_section }}</td>
+                                        <td>{{ member.qualification|default:"—" }}</td>
+                                        <td>{{ member.contact|default:"—" }}</td>
+                                    </tr>
+                                    {% empty %}
                                     <tr>
                                         <td colspan="6" class="text-center text-muted py-5">
                                             <i class="fas fa-hourglass-half fa-2x mb-3 d-block" style="color: #E61013; opacity: 0.4;"></i>
                                             Data will be updated soon. Please check back later.
                                         </td>
                                     </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>

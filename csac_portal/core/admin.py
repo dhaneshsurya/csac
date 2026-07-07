@@ -11,6 +11,7 @@ from .models import (
     IICPageSettings, IICGalleryImage, CampusMedia, Infrastructure, InfrastructureImage,
     Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
     SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings, NonTeachingStaffPageSettings,
+    NonTeachingStaffMember,
     NEPTab, NEPTabFile, NEPTabLink,
     LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
     MenuItem
@@ -25,6 +26,7 @@ from .forms import (
     InfrastructureForm, InfrastructureImageForm, AccreditationLogoForm, QuickLinkCardForm,
     ProductForm, ProductInquiryForm, ProductReviewForm,
     SportsPageSettingsForm, SportsGalleryImageForm, TeachingStaffPageSettingsForm, NonTeachingStaffPageSettingsForm,
+    NonTeachingStaffMemberForm,
     NEPTabForm, NEPTabFileForm, NEPTabLinkForm,
     LibraryPageSettingsForm, LibraryBookCategoryForm, LibraryResourceForm, LibraryBookSuggestionForm,
     LibraryGalleryImageForm, MenuItemForm
@@ -669,6 +671,15 @@ class NonTeachingStaffPageSettingsAdmin(admin.ModelAdmin):
         if self.model.objects.exists():
             return False
         return True
+
+
+@admin.register(NonTeachingStaffMember)
+class NonTeachingStaffMemberAdmin(admin.ModelAdmin):
+    form = NonTeachingStaffMemberForm
+    list_display = ('name', 'designation', 'department_section', 'order', 'is_active')
+    list_filter = ('department_section', 'is_active')
+    search_fields = ('name', 'designation', 'department_section', 'contact')
+    list_editable = ('order', 'is_active')
 
 
 @admin.register(SportsPageSettings)

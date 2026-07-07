@@ -223,12 +223,14 @@ def staff_teaching(request):
 
 
 def staff_nonteaching(request):
-    from .models import NonTeachingStaffPageSettings
+    from .models import NonTeachingStaffPageSettings, NonTeachingStaffMember
 
     page_settings, _ = NonTeachingStaffPageSettings.objects.get_or_create(pk=1)
+    staff_members = NonTeachingStaffMember.objects.filter(is_active=True)
 
     context = {
         'page_settings': page_settings,
+        'staff_members': staff_members,
         'page_title': 'Non-Teaching Staff',
         'breadcrumb': 'Non-Teaching Staff',
     }
@@ -1026,6 +1028,74 @@ def edit_nonteaching_staff_page(request):
         'breadcrumb': 'Edit Non-Teaching Staff Page',
     }
     return render(request, 'core/edit_nonteaching_staff_page.html', context)
+
+
+@staff_required
+def manage_nonteaching_staff(request):
+    from .models import NonTeachingStaffMember
+    from .forms import NonTeachingStaffMemberForm
+
+    if request.method == 'POST':
+        form = NonTeachingStaffMemberForm(request.POST)
+        if form.is_valid():
+            member = form.save()
+            messages.success(request, f"Staff member '{member.name}' added successfully!")
+            return redirect('core:manage_nonteaching_staff')
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(request, f"Error in {field}: {error}")
+    else:
+        form = NonTeachingStaffMemberForm()
+
+    staff_members = NonTeachingStaffMember.objects.all()
+
+    context = {
+        'form': form,
+        'staff_members': staff_members,
+        'page_title': 'Manage Non-Teaching Staff',
+        'breadcrumb': 'Manage Non-Teaching Staff',
+    }
+    return render(request, 'core/manage_nonteaching_staff.html', context)
+
+
+@staff_required
+def edit_nonteaching_staff_member(request, pk):
+    from .models import NonTeachingStaffMember
+    from .forms import NonTeachingStaffMemberForm
+
+    member = get_object_or_404(NonTeachingStaffMember, pk=pk)
+
+    if request.method == 'POST':
+        form = NonTeachingStaffMemberForm(request.POST, instance=member)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Staff member '{member.name}' updated successfully!")
+            return redirect('core:manage_nonteaching_staff')
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(request, f"Error in {field}: {error}")
+    else:
+        form = NonTeachingStaffMemberForm(instance=member)
+
+    context = {
+        'form': form,
+        'member': member,
+        'page_title': 'Edit Staff Member',
+        'breadcrumb': 'Edit Staff Member',
+    }
+    return render(request, 'core/edit_nonteaching_staff_member.html', context)
+
+
+@staff_required
+def delete_nonteaching_staff_member(request, pk):
+    from .models import NonTeachingStaffMember
+
+    member = get_object_or_404(NonTeachingStaffMember, pk=pk)
+    if request.method == 'POST':
+        name = member.name
+        member.delete()
+        messages.success(request, f"Staff member '{name}' deleted successfully!")
+    return redirect('core:manage_nonteaching_staff')
 
 
 @staff_required
