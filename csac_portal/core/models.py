@@ -1312,6 +1312,27 @@ class TeachingStaffPageSettings(models.Model):
         return self.title
 
 
+class NonTeachingStaffPageSettings(models.Model):
+    """Singleton settings for the non-teaching staff listing page header."""
+    title = models.CharField(
+        max_length=200,
+        default='Non-Teaching Staff',
+        help_text='Main heading shown on the non-teaching staff page',
+    )
+    subtitle = models.TextField(
+        default='Meet our dedicated administrative and support staff members.',
+        help_text='Short description shown below the heading',
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Non-Teaching Staff Page Settings'
+        verbose_name_plural = 'Non-Teaching Staff Page Settings'
+
+    def __str__(self):
+        return self.title
+
+
 class SportsGalleryImage(models.Model):
     image = models.ImageField(upload_to='sports/gallery/', blank=True, null=True)
     image_url = models.URLField(blank=True, max_length=500, help_text="External URL for image if not uploaded locally")

@@ -223,7 +223,12 @@ def staff_teaching(request):
 
 
 def staff_nonteaching(request):
+    from .models import NonTeachingStaffPageSettings
+
+    page_settings, _ = NonTeachingStaffPageSettings.objects.get_or_create(pk=1)
+
     context = {
+        'page_settings': page_settings,
         'page_title': 'Non-Teaching Staff',
         'breadcrumb': 'Non-Teaching Staff',
     }
@@ -993,6 +998,34 @@ def edit_teaching_staff_page(request):
         'breadcrumb': 'Edit Teaching Staff Page',
     }
     return render(request, 'core/edit_teaching_staff_page.html', context)
+
+
+@staff_required
+def edit_nonteaching_staff_page(request):
+    from .models import NonTeachingStaffPageSettings
+    from .forms import NonTeachingStaffPageSettingsForm
+
+    page_settings, _ = NonTeachingStaffPageSettings.objects.get_or_create(pk=1)
+
+    if request.method == 'POST':
+        form = NonTeachingStaffPageSettingsForm(request.POST, instance=page_settings)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Non-teaching staff page content updated successfully!')
+            return redirect('core:staff_nonteaching')
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(request, f"Error in {field}: {error}")
+    else:
+        form = NonTeachingStaffPageSettingsForm(instance=page_settings)
+
+    context = {
+        'form': form,
+        'page_settings': page_settings,
+        'page_title': 'Edit Non-Teaching Staff Page',
+        'breadcrumb': 'Edit Non-Teaching Staff Page',
+    }
+    return render(request, 'core/edit_nonteaching_staff_page.html', context)
 
 
 @staff_required

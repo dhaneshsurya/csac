@@ -8,7 +8,7 @@ from .models import (
     IICPageSettings, IICGalleryImage, CampusMedia, Testimonial,
     Infrastructure, InfrastructureImage, AccreditationLogo, QuickLinkCard,
     Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
-    SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings,
+    SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings, NonTeachingStaffPageSettings,
     NEPTab, NEPTabFile, NEPTabLink,
     LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
     MenuItem
@@ -515,6 +515,22 @@ class TeachingStaffPageSettingsForm(forms.ModelForm):
         fields = ['title', 'subtitle']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'e.g. Faculty List 2025-26'}),
+            'subtitle': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            existing_classes = field.widget.attrs.get('class', '')
+            field.widget.attrs['class'] = f"{existing_classes} form-control".strip()
+
+
+class NonTeachingStaffPageSettingsForm(forms.ModelForm):
+    class Meta:
+        model = NonTeachingStaffPageSettings
+        fields = ['title', 'subtitle']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'e.g. Non-Teaching Staff'}),
             'subtitle': forms.Textarea(attrs={'rows': 3}),
         }
 

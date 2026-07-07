@@ -10,7 +10,7 @@ from .models import (
     BreadcrumbSettings, PageBreadcrumb, NSSPageSettings, NSSActivity, NSSGalleryImage,
     IICPageSettings, IICGalleryImage, CampusMedia, Infrastructure, InfrastructureImage,
     Product, ProductInquiry, ProductCategory, ProductImage, ProductReview,
-    SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings,
+    SportsPageSettings, SportsGalleryImage, TeachingStaffPageSettings, NonTeachingStaffPageSettings,
     NEPTab, NEPTabFile, NEPTabLink,
     LibraryPageSettings, LibraryBookCategory, LibraryResource, LibraryBookSuggestion, LibraryGalleryImage,
     MenuItem
@@ -24,7 +24,7 @@ from .forms import (
     IICPageSettingsForm, IICGalleryImageForm, CampusMediaForm, TestimonialForm,
     InfrastructureForm, InfrastructureImageForm, AccreditationLogoForm, QuickLinkCardForm,
     ProductForm, ProductInquiryForm, ProductReviewForm,
-    SportsPageSettingsForm, SportsGalleryImageForm, TeachingStaffPageSettingsForm,
+    SportsPageSettingsForm, SportsGalleryImageForm, TeachingStaffPageSettingsForm, NonTeachingStaffPageSettingsForm,
     NEPTabForm, NEPTabFileForm, NEPTabLinkForm,
     LibraryPageSettingsForm, LibraryBookCategoryForm, LibraryResourceForm, LibraryBookSuggestionForm,
     LibraryGalleryImageForm, MenuItemForm
@@ -652,6 +652,17 @@ class ProductReviewAdmin(admin.ModelAdmin):
 @admin.register(TeachingStaffPageSettings)
 class TeachingStaffPageSettingsAdmin(admin.ModelAdmin):
     form = TeachingStaffPageSettingsForm
+    list_display = ('title',)
+
+    def has_add_permission(self, request):
+        if self.model.objects.exists():
+            return False
+        return True
+
+
+@admin.register(NonTeachingStaffPageSettings)
+class NonTeachingStaffPageSettingsAdmin(admin.ModelAdmin):
+    form = NonTeachingStaffPageSettingsForm
     list_display = ('title',)
 
     def has_add_permission(self, request):
