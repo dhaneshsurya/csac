@@ -83,9 +83,15 @@ def site_context(request):
     breadcrumb_images = {k: _resolve(k) for k in _all_keys}
 
     try:
-        from .utils import get_navbar_menu, seed_default_menu_items, sync_facilities_menu_item
+        from .utils import (
+            get_navbar_menu,
+            seed_default_menu_items,
+            sync_facilities_menu_item,
+            sync_event_feedback_menu_items,
+        )
         seed_default_menu_items()
         sync_facilities_menu_item()
+        sync_event_feedback_menu_items()
         navbar_menu = get_navbar_menu()
     except Exception:
         navbar_menu = []

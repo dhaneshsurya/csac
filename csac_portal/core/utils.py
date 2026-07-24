@@ -74,6 +74,98 @@ def sync_facilities_menu_item():
     return facilities
 
 
+def sync_event_feedback_menu_items():
+    """
+    Sync Feedback submenu with active event feedback campaigns (show_in_menu=True).
+    Also ensures a list page link exists.
+    """
+    from .models import MenuItem
+
+    try:
+        from feedback.models import EventFeedbackCampaign
+    except Exception:
+        return
+
+    feedback_parent = MenuItem.objects.filter(title='Feedback', parent=None).first()
+    if not feedback_parent:
+        return
+
+    # List page
+    list_item, _ = MenuItem.objects.get_or_create(
+        title='Event Feedback Forms',
+        parent=feedback_parent,
+        defaults={
+            'url': 'feedback:event_feedback_list',
+            'is_named_url': True,
+            'open_in_new_tab': False,
+            'order': 5,
+            'is_active': True,
+        },
+    )
+    if list_item.url != 'feedback:event_feedback_list' or not list_item.is_named_url:
+        list_item.url = 'feedback:event_feedback_list'
+        list_item.is_named_url = True
+        list_item.is_active = True
+        list_item.save(update_fields=['url', 'is_named_url', 'is_active'])
+
+    # Per-campaign links
+    campaigns = EventFeedbackCampaign.objects.filter(show_in_menu=True, is_active=True)
+    campaign_titles = set()
+    base_order = 6
+    for idx, campaign in enumerate(campaigns):
+        title = (campaign.menu_title or campaign.title)[:120]
+        campaign_titles.add(title)
+        # Named URL with slug is not supported by MenuItem reverse without args,
+        # so store the public path as a plain URL.
+        public_path = campaign.get_public_url_path()
+        item = MenuItem.objects.filter(parent=feedback_parent, title=title).first()
+        if not item:
+            # Also match by URL path
+            item = MenuItem.objects.filter(
+                parent=feedback_parent,
+                url=public_path,
+            ).first()
+        if item:
+            updates = {}
+            if item.title != title:
+                updates['title'] = title
+            if item.url != public_path or item.is_named_url:
+                updates['url'] = public_path
+                updates['is_named_url'] = False
+            if not item.is_active:
+                updates['is_active'] = True
+            order = base_order + idx
+            if item.order != order:
+                updates['order'] = order
+            if updates:
+                for field, value in updates.items():
+                    setattr(item, field, value)
+                item.save(update_fields=list(updates.keys()))
+        else:
+            MenuItem.objects.create(
+                title=title,
+                parent=feedback_parent,
+                url=public_path,
+                is_named_url=False,
+                open_in_new_tab=False,
+                order=base_order + idx,
+                is_active=True,
+            )
+
+    # Deactivate menu items that pointed at event feedback paths no longer shown
+    for item in MenuItem.objects.filter(parent=feedback_parent, is_named_url=False):
+        if item.url and item.url.startswith('/feedback/events/') and item.url != '/feedback/events/':
+            if item.title not in campaign_titles and item.title != 'Event Feedback Forms':
+                if item.is_active:
+                    item.is_active = False
+                    item.save(update_fields=['is_active'])
+
+
+def sync_admission_fest_feedback_menu_item():
+    """Backward-compatible alias."""
+    return sync_event_feedback_menu_items()
+
+
 def get_navbar_menu():
     from django.urls import reverse
 
@@ -180,7 +272,8 @@ def seed_default_menu_items():
             ("Student's Feedback", "feedback:student_feedback", True, False, 1, []),
             ("Parent's Feedback", "feedback:parent_feedback", True, False, 2, []),
             ("Faculty's Feedback", "feedback:faculty_feedback", True, False, 3, []),
-            ("Alumni's Feedback", "feedback:alumni_feedback", True, False, 4, [])
+            ("Alumni's Feedback", "feedback:alumni_feedback", True, False, 4, []),
+            ("Event Feedback Forms", "feedback:event_feedback_list", True, False, 5, []),
         ]),
 
         ("Facilities", "core:infrastructure", True, False, 6, []),
