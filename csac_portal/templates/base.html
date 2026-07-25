@@ -89,6 +89,54 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
     font-size: 9px;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
+.footer-copy-bar {
+    min-height: 1.5rem;
+}
+.footer-powered-by {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px !important;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.55) !important;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin: 0;
+}
+.footer-powered-by-link {
+    display: inline-flex;
+    align-items: center;
+    background-color: #E61013 !important;
+    color: rgba(255, 255, 255, 0.88) !important;
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: inherit;
+    line-height: 1.4;
+    padding: 1px 7px;
+    border-radius: 3px;
+    vertical-align: middle;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+.footer-powered-by-link:hover,
+.footer-powered-by-link:focus {
+    background-color: #ff1f22 !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.55);
+}
+@media (max-width: 768px) {
+    .footer-copy-bar {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-powered-by {
+        order: 2;
+        margin-top: 4px;
+        font-size: 10px !important;
+        justify-content: center;
+    }
+}
 /* Floating Social Media Bar */
 .social-float-bar {
     position: fixed;
@@ -382,13 +430,19 @@ mark{background-color:rgb(243,64,64);padding:2px 4px;border-radius:3px;font-weig
   <div class="container-fluid px-md-5 px-3">
     <div class="row">
       <div class="col-12">
-        <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 text-center">
-          <p class="--p-xs mb-0">Copyright &copy; {% now "Y" %} All Rights Reserved by <a href="{% url 'core:home' %}">Chaitanya Science and Arts College, Pamgarh</a></p>
-          <span class="mx-2 text-muted">|</span>
-          <p class="--p-xs mb-0 d-flex align-items-center gap-1 text-muted">
-            <i class="far fa-eye text-primary"></i>
-            <span>Visitor Count: <strong class="text-white">{{ visitor_count }}</strong></span>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 footer-copy-bar">
+          <p class="--p-xs mb-0 footer-powered-by">
+            <span>Powered By:</span>
+            <a href="https://dnstech.in" target="_blank" rel="noopener noreferrer" class="footer-powered-by-link">dnstech.in</a>
           </p>
+          <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 text-center flex-grow-1">
+            <p class="--p-xs mb-0">Copyright &copy; {% now "Y" %} All Rights Reserved by <a href="{% url 'core:home' %}">Chaitanya Science and Arts College, Pamgarh</a></p>
+            <span class="mx-2 text-muted">|</span>
+            <p class="--p-xs mb-0 d-flex align-items-center gap-1 text-muted">
+              <i class="far fa-eye text-primary"></i>
+              <span>Visitor Count: <strong class="text-white">{{ visitor_count }}</strong></span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
